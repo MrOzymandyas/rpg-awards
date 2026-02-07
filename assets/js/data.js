@@ -71,7 +71,7 @@ const CATEGORIES = [
     {
         id: 'vamo-te-pegar',
         number: '8',
-        title: 'Vamo Te Pegar na Curva Award',
+        title: 'Vamo Te Pegar na Curva',
         description: 'TA FUDIDO FILHO DA PUTA QUE EU VO LI PEGAR.',
         type: 'scene'
     },
