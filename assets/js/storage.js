@@ -1,578 +1,288 @@
 /**
  * RPG Awards - Storage Module
- * Gerencia persistência de dados usando localStorage
- * Simula backend para persistência de votos
+ * Firestore para persistência + cache local para performance
  */
 
 const Storage = (function() {
     'use strict';
 
-    // Chaves do localStorage
-    const KEYS = {
-        CURRENT_USER: 'rpg_awards_user',
-        VOTES: 'rpg_awards_votes',
-        VOTERS: 'rpg_awards_voters',
-        SESSION: 'rpg_awards_session'
-    };
+    // Firebase
+    firebase.initializeApp({
+        apiKey: "AIzaSyAKYCq0TejCaATaTGj2GhwMBO-Zcz0Cm_0",
+        authDomain: "rpg-awards.firebaseapp.com",
+        projectId: "rpg-awards",
+        storageBucket: "rpg-awards.firebasestorage.app",
+        messagingSenderId: "560575373414",
+        appId: "1:560575373414:web:48280ebf5171c807df0da7"
+    });
+    const db = firebase.firestore();
+    const COL = 'voters';
 
-    /**
-     * Salva dados no localStorage
-     * @param {string} key - Chave de armazenamento
-     * @param {*} data - Dados a serem salvos
-     */
-    function save(key, data) {
+    let currentUser = null;
+    let votersCache = {};
+
+    // ==================== FIRESTORE ====================
+
+    async function initFirestore() {
         try {
-            localStorage.setItem(key, JSON.stringify(data));
-            return true;
-        } catch (error) {
-            console.error('Erro ao salvar dados:', error);
-            return false;
+            const snap = await db.collection(COL).get();
+            snap.forEach(doc => { votersCache[doc.id] = doc.data(); });
+        } catch (e) {
+            console.error('Firestore init error:', e);
+        }
+        try {
+            const saved = localStorage.getItem('rpg_awards_user');
+            if (saved) currentUser = JSON.parse(saved);
+        } catch (e) {}
+    }
+
+    async function refreshVoters() {
+        try {
+            const snap = await db.collection(COL).get();
+            votersCache = {};
+            snap.forEach(doc => { votersCache[doc.id] = doc.data(); });
+        } catch (e) {
+            console.error('Firestore refresh error:', e);
         }
     }
 
-    /**
-     * Carrega dados do localStorage
-     * @param {string} key - Chave de armazenamento
-     * @param {*} defaultValue - Valor padrão se não encontrado
-     * @returns {*} Dados carregados ou valor padrão
-     */
-    function load(key, defaultValue = null) {
-        try {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : defaultValue;
-        } catch (error) {
-            console.error('Erro ao carregar dados:', error);
-            return defaultValue;
+    function persistVoter(uid) {
+        const data = votersCache[uid];
+        if (data) {
+            db.collection(COL).doc(uid).set(data)
+                .catch(e => console.error('Firestore write error:', e));
         }
-    }
-
-    /**
-     * Remove dados do localStorage
-     * @param {string} key - Chave de armazenamento
-     */
-    function remove(key) {
-        try {
-            localStorage.removeItem(key);
-            return true;
-        } catch (error) {
-            console.error('Erro ao remover dados:', error);
-            return false;
-        }
-    }
-
-    /**
-     * Limpa todos os dados do aplicativo
-     */
-    function clearAll() {
-        Object.values(KEYS).forEach(key => remove(key));
     }
 
     // ==================== AUTENTICAÇÃO ====================
 
-    /**
-     * Autentica um jogador
-     * @param {string} id - Identificação do jogador
-     * @param {string} key - Chave de acesso
-     * @returns {Object|null} Dados do usuário ou null se inválido
-     */
     function authenticate(id, key) {
-        const player = PLAYERS.find(p => 
-            p.id.toUpperCase() === id.toUpperCase() && 
-            p.key === key
+        const player = PLAYERS.find(p =>
+            p.id.toUpperCase() === id.toUpperCase() && p.key === key
         );
+        if (!player) return null;
 
-        if (player) {
-            const session = {
-                ...player,
-                loginTime: new Date().toISOString(),
-                sessionId: generateSessionId(),
-                displayName: player.title || player.name,
-                formalGreeting: player.greeting || 'Bem-vindo'
-            };
-            save(KEYS.CURRENT_USER, session);
-            save(KEYS.SESSION, session);
-            return session;
-        }
-
-        return null;
-    }
-
-    /**
-     * Obtém mensagem de erro apropriada para falha de autenticação
-     * @param {string} id - ID tentado
-     * @param {string} key - Chave tentada
-     * @returns {Object} Tipo de erro e mensagem
-     */
-    function getAuthError(id, key) {
-        if (!id || !key) {
-            return {
-                type: 'missing_fields',
-                message: 'Vossa Senhoria, por favor forneça tanto o nome quanto a senha de acesso à cerimônia.'
-            };
-        }
-
-        const playerExists = PLAYERS.find(p => p.id.toUpperCase() === id.toUpperCase());
-        
-        if (!playerExists) {
-            return {
-                type: 'user_not_found',
-                message: 'Lamento, mas esse nome não consta na lista de nobres convidados para esta cerimônia.'
-            };
-        }
-
-        if (playerExists.key !== key) {
-            return {
-                type: 'wrong_password',
-                message: 'A senha fornecida está incorreta. Por favor, verifique suas credenciais de acesso.'
-            };
-        }
-
-        return {
-            type: 'unknown',
-            message: 'Ocorreu um erro desconhecido durante a autenticação.'
+        currentUser = {
+            ...player,
+            loginTime: new Date().toISOString(),
+            sessionId: 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            displayName: player.title || player.name,
+            formalGreeting: player.greeting || 'Bem-vindo'
         };
+        localStorage.setItem('rpg_awards_user', JSON.stringify(currentUser));
+        return currentUser;
     }
 
-    /**
-     * Gera ID único de sessão
-     * @returns {string} ID de sessão
-     */
-    function generateSessionId() {
-        return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    function getAuthError(id, key) {
+        if (!id || !key) return { type: 'missing_fields', message: 'Vossa Senhoria, por favor forneça tanto o nome quanto a senha de acesso à cerimônia.' };
+        const exists = PLAYERS.find(p => p.id.toUpperCase() === id.toUpperCase());
+        if (!exists) return { type: 'user_not_found', message: 'Lamento, mas esse nome não consta na lista de nobres convidados para esta cerimônia.' };
+        if (exists.key !== key) return { type: 'wrong_password', message: 'A senha fornecida está incorreta. Por favor, verifique suas credenciais de acesso.' };
+        return { type: 'unknown', message: 'Ocorreu um erro desconhecido durante a autenticação.' };
     }
 
-    /**
-     * Verifica se há sessão ativa
-     * @returns {Object|null} Sessão ativa ou null
-     */
-    function getCurrentUser() {
-        return load(KEYS.CURRENT_USER);
-    }
+    function getCurrentUser() { return currentUser; }
+    function isLoggedIn() { return !!currentUser; }
+    function isAdmin() { return currentUser && currentUser.role === 'admin'; }
 
-    /**
-     * Verifica se usuário está logado
-     * @returns {boolean}
-     */
-    function isLoggedIn() {
-        return !!getCurrentUser();
-    }
-
-    /**
-     * Verifica se usuário é administrador
-     * @returns {boolean}
-     */
-    function isAdmin() {
-        const user = getCurrentUser();
-        return user && user.role === 'admin';
-    }
-
-    /**
-     * Realiza logout
-     */
     function logout() {
-        remove(KEYS.CURRENT_USER);
-        remove(KEYS.SESSION);
+        currentUser = null;
+        localStorage.removeItem('rpg_awards_user');
     }
 
     // ==================== VOTOS ====================
 
-    /**
-     * Registra uma escolha (1º ou 2º lugar)
-     * @param {string} categoryId - ID da categoria
-     * @param {string} nomineeId - ID do indicado
-     * @param {string} choice - 'first' ou 'second'
-     * @returns {boolean} Sucesso da operação
-     */
-    function vote(categoryId, nomineeId, choice = 'first') {
-        const user = getCurrentUser();
-        if (!user) {
-            console.error('Usuário não autenticado');
-            return false;
-        }
+    function vote(categoryId, nomineeId, choice) {
+        if (!currentUser) return false;
+        const uid = currentUser.id;
 
-        // Carrega votos existentes
-        const allVotes = load(KEYS.VOTES, {});
-        
-        // Registra voto
-        if (!allVotes[categoryId]) {
-            allVotes[categoryId] = { first: {}, second: {} };
-        }
-        if (!allVotes[categoryId].first) allVotes[categoryId].first = {};
-        if (!allVotes[categoryId].second) allVotes[categoryId].second = {};
-        
-        if (!allVotes[categoryId][choice][nomineeId]) {
-            allVotes[categoryId][choice][nomineeId] = [];
-        }
-
-        // Remove voto anterior do usuário nesta escolha (se existir)
-        Object.keys(allVotes[categoryId][choice]).forEach(nId => {
-            allVotes[categoryId][choice][nId] = allVotes[categoryId][choice][nId].filter(
-                v => v.userId !== user.id
-            );
-        });
-
-        // Adiciona voto do usuário
-        allVotes[categoryId][choice][nomineeId].push({
-            userId: user.id,
-            timestamp: new Date().toISOString(),
-            sessionId: user.sessionId
-        });
-
-        // Salva votos
-        save(KEYS.VOTES, allVotes);
-
-        // Atualiza registro do votante
-        updateVoterRecord(categoryId, nomineeId, choice);
-
-        return true;
-    }
-
-    /**
-     * Remove uma escolha
-     * @param {string} categoryId - ID da categoria
-     * @param {string} choice - 'first' ou 'second'
-     */
-    function removeVote(categoryId, choice) {
-        const user = getCurrentUser();
-        if (!user) return false;
-
-        // Remove do registro global
-        const allVotes = load(KEYS.VOTES, {});
-        if (allVotes[categoryId] && allVotes[categoryId][choice]) {
-            Object.keys(allVotes[categoryId][choice]).forEach(nId => {
-                allVotes[categoryId][choice][nId] = allVotes[categoryId][choice][nId].filter(
-                    v => v.userId !== user.id
-                );
-            });
-            save(KEYS.VOTES, allVotes);
-        }
-
-        // Remove do registro do votante
-        const voters = load(KEYS.VOTERS, {});
-        if (voters[user.id] && voters[user.id].votes[categoryId]) {
-            if (choice === 'first') {
-                voters[user.id].votes[categoryId].firstChoice = null;
-            } else {
-                voters[user.id].votes[categoryId].secondChoice = null;
-            }
-            
-            // Se ambos forem null, remove a categoria
-            const catVote = voters[user.id].votes[categoryId];
-            if (!catVote.firstChoice && !catVote.secondChoice) {
-                delete voters[user.id].votes[categoryId];
-            }
-            
-            save(KEYS.VOTERS, voters);
-        }
-
-        return true;
-    }
-
-    /**
-     * Atualiza registro do votante
-     * @param {string} categoryId - ID da categoria
-     * @param {string} nomineeId - ID do indicado
-     * @param {string} choice - 'first' ou 'second'
-     */
-    function updateVoterRecord(categoryId, nomineeId, choice) {
-        const user = getCurrentUser();
-        const voters = load(KEYS.VOTERS, {});
-
-        if (!voters[user.id]) {
-            voters[user.id] = {
-                name: user.name,
-                title: user.title || '',
+        if (!votersCache[uid]) {
+            votersCache[uid] = {
+                name: currentUser.name,
+                title: currentUser.title || '',
                 votes: {},
                 firstVote: new Date().toISOString(),
                 lastVote: new Date().toISOString()
             };
         }
 
-        if (!voters[user.id].votes[categoryId]) {
-            voters[user.id].votes[categoryId] = {
-                firstChoice: null,
-                secondChoice: null
-            };
+        if (!votersCache[uid].votes[categoryId]) {
+            votersCache[uid].votes[categoryId] = { firstChoice: null, secondChoice: null };
         }
+
+        const choiceData = { nomineeId, timestamp: new Date().toISOString() };
 
         if (choice === 'first') {
-            voters[user.id].votes[categoryId].firstChoice = {
-                nomineeId: nomineeId,
-                timestamp: new Date().toISOString()
-            };
+            votersCache[uid].votes[categoryId].firstChoice = choiceData;
         } else {
-            voters[user.id].votes[categoryId].secondChoice = {
-                nomineeId: nomineeId,
-                timestamp: new Date().toISOString()
-            };
+            votersCache[uid].votes[categoryId].secondChoice = choiceData;
         }
-        
-        voters[user.id].lastVote = new Date().toISOString();
-        save(KEYS.VOTERS, voters);
+
+        votersCache[uid].lastVote = new Date().toISOString();
+        persistVoter(uid);
+        return true;
     }
 
-    /**
-     * Verifica se usuário completou uma categoria (ambas escolhas)
-     * @param {string} categoryId - ID da categoria
-     * @returns {boolean}
-     */
+    function removeVote(categoryId, choice) {
+        if (!currentUser) return false;
+        const uid = currentUser.id;
+        const voter = votersCache[uid];
+        if (!voter || !voter.votes[categoryId]) return false;
+
+        if (choice === 'first') {
+            voter.votes[categoryId].firstChoice = null;
+        } else {
+            voter.votes[categoryId].secondChoice = null;
+        }
+
+        if (!voter.votes[categoryId].firstChoice && !voter.votes[categoryId].secondChoice) {
+            delete voter.votes[categoryId];
+        }
+
+        persistVoter(uid);
+        return true;
+    }
+
     function hasCompletedCategory(categoryId) {
-        const vote = getVote(categoryId);
-        return vote && vote.firstChoice && vote.secondChoice;
+        const v = getVote(categoryId);
+        return v && v.firstChoice && v.secondChoice;
     }
 
-    /**
-     * Verifica se usuário já votou em uma categoria (pelo menos 1 escolha)
-     * @param {string} categoryId - ID da categoria
-     * @returns {boolean}
-     */
     function hasVotedInCategory(categoryId) {
-        const vote = getVote(categoryId);
-        return vote && (vote.firstChoice || vote.secondChoice);
+        const v = getVote(categoryId);
+        return v && (v.firstChoice || v.secondChoice);
     }
 
-    /**
-     * Obtém voto do usuário em uma categoria
-     * @param {string} categoryId - ID da categoria
-     * @returns {Object|null} Dados do voto ou null
-     */
     function getVote(categoryId) {
-        const user = getCurrentUser();
-        if (!user) return null;
-
-        const voters = load(KEYS.VOTERS, {});
-        return voters[user.id] ? voters[user.id].votes[categoryId] : null;
+        if (!currentUser) return null;
+        const voter = votersCache[currentUser.id];
+        return voter ? voter.votes[categoryId] || null : null;
     }
 
-    /**
-     * Obtém todos os votos do usuário atual
-     * @returns {Object} Votos do usuário
-     */
     function getUserVotes() {
-        const user = getCurrentUser();
-        if (!user) return {};
-
-        const voters = load(KEYS.VOTERS, {});
-        return voters[user.id] ? voters[user.id].votes : {};
+        if (!currentUser) return {};
+        const voter = votersCache[currentUser.id];
+        return voter ? voter.votes || {} : {};
     }
 
-    /**
-     * Conta quantas categorias o usuário completou (ambas escolhas)
-     * @returns {number} Número de categorias completas
-     */
     function getVoteCount() {
-        const votes = getUserVotes();
-        let count = 0;
-        Object.values(votes).forEach(v => {
-            if (v && v.firstChoice && v.secondChoice) count++;
-        });
-        return count;
+        return Object.values(getUserVotes()).filter(v => v && v.firstChoice && v.secondChoice).length;
     }
 
-    /**
-     * Verifica se usuário completou todos os votos
-     * @returns {boolean}
-     */
     function hasCompletedVoting() {
         return getVoteCount() === CATEGORIES.length;
     }
 
-    /**
-     * Obtém todos os votos (apenas admin)
-     * @returns {Object} Todos os votos
-     */
+    // ==================== ADMIN ====================
+
     function getAllVotes() {
-        if (!isAdmin()) {
-            console.error('Acesso negado: apenas administradores');
-            return null;
-        }
-        return load(KEYS.VOTES, {});
+        if (!isAdmin()) return null;
+        return votersCache;
     }
 
-    /**
-     * Obtém todos os votantes (apenas admin)
-     * @returns {Object} Todos os votantes
-     */
     function getAllVoters() {
-        if (!isAdmin()) {
-            console.error('Acesso negado: apenas administradores');
-            return null;
-        }
-        return load(KEYS.VOTERS, {});
+        if (!isAdmin()) return null;
+        return votersCache;
     }
 
-    /**
-     * Calcula resultados por categoria (apenas admin)
-     * Sistema de pontuação: 1º lugar = 2 pontos, 2º lugar = 1 ponto
-     * @returns {Array} Resultados formatados
-     */
     function getResults() {
-        if (!isAdmin()) {
-            console.error('Acesso negado: apenas administradores');
-            return null;
-        }
-
-        const votes = load(KEYS.VOTES, {});
+        if (!isAdmin()) return null;
         const results = [];
 
         CATEGORIES.forEach(category => {
-            const categoryVotes = votes[category.id] || { first: {}, second: {} };
-            const firstVotes = categoryVotes.first || {};
-            const secondVotes = categoryVotes.second || {};
             const nominees = NOMINEES[category.id] || [];
-            
             const nomineeResults = nominees.map(nominee => {
-                const firstList = firstVotes[nominee.id] || [];
-                const secondList = secondVotes[nominee.id] || [];
-                const firstCount = firstList.length;
-                const secondCount = secondList.length;
-                // Pontuação: 1º lugar = 2pts, 2º lugar = 1pt
-                const score = (firstCount * 2) + (secondCount * 1);
-                
+                let firstVotes = 0, secondVotes = 0;
+                const voterIds = [];
+
+                Object.entries(votersCache).forEach(([uid, voter]) => {
+                    const v = voter.votes && voter.votes[category.id];
+                    if (v && v.firstChoice && v.firstChoice.nomineeId === nominee.id) {
+                        firstVotes++;
+                        voterIds.push(uid);
+                    }
+                    if (v && v.secondChoice && v.secondChoice.nomineeId === nominee.id) {
+                        secondVotes++;
+                        if (!voterIds.includes(uid)) voterIds.push(uid);
+                    }
+                });
+
                 return {
                     ...nominee,
-                    firstVotes: firstCount,
-                    secondVotes: secondCount,
-                    score: score,
-                    votes: firstCount + secondCount, // Total de votos (para compatibilidade)
-                    voters: [...firstList, ...secondList].map(v => v.userId)
+                    firstVotes,
+                    secondVotes,
+                    score: (firstVotes * 2) + secondVotes,
+                    votes: firstVotes + secondVotes,
+                    voters: voterIds
                 };
             });
 
-            // Ordena por score (pontuação)
-            nomineeResults.sort((a, b) => {
-                if (b.score !== a.score) return b.score - a.score;
-                // Desempate: quem tem mais 1º lugares
-                return b.firstVotes - a.firstVotes;
-            });
+            nomineeResults.sort((a, b) => b.score !== a.score ? b.score - a.score : b.firstVotes - a.firstVotes);
 
-            // Calcula totais
-            const totalFirstVotes = nomineeResults.reduce((sum, n) => sum + n.firstVotes, 0);
-            const totalSecondVotes = nomineeResults.reduce((sum, n) => sum + n.secondVotes, 0);
-            const totalVotes = totalFirstVotes + totalSecondVotes;
+            const totalFirst = nomineeResults.reduce((s, n) => s + n.firstVotes, 0);
+            const totalSecond = nomineeResults.reduce((s, n) => s + n.secondVotes, 0);
 
             results.push({
-                category: category,
+                category,
                 nominees: nomineeResults,
-                totalVotes: totalVotes,
-                totalFirstVotes: totalFirstVotes,
-                totalSecondVotes: totalSecondVotes
+                totalVotes: totalFirst + totalSecond,
+                totalFirstVotes: totalFirst,
+                totalSecondVotes: totalSecond
             });
         });
 
         return results;
     }
 
-    /**
-     * Obtém estatísticas gerais (apenas admin)
-     * @returns {Object} Estatísticas
-     */
     function getStats() {
-        if (!isAdmin()) {
-            console.error('Acesso negado: apenas administradores');
-            return null;
-        }
-
-        const voters = load(KEYS.VOTERS, {});
+        if (!isAdmin()) return null;
         const totalPlayers = PLAYERS.filter(p => p.role === 'player').length;
-        const votedPlayers = Object.keys(voters).length;
-        
-        // Calcula taxa de conclusão (ambas escolhas em todas categorias)
-        let completedVoters = 0;
-        Object.values(voters).forEach(voter => {
-            const completedCategories = Object.values(voter.votes).filter(
-                v => v && v.firstChoice && v.secondChoice
-            ).length;
-            if (completedCategories === CATEGORIES.length) {
-                completedVoters++;
-            }
-        });
+        const votedPlayers = Object.keys(votersCache).length;
 
-        // Conta votos totais (cada escolha completa = 1 voto)
-        let totalVotes = 0;
-        Object.values(voters).forEach(voter => {
-            Object.values(voter.votes).forEach(v => {
-                if (v?.firstChoice) totalVotes++;
-                if (v?.secondChoice) totalVotes++;
+        let completedVoters = 0, totalVotes = 0;
+        Object.values(votersCache).forEach(voter => {
+            const votes = voter.votes || {};
+            const done = Object.values(votes).filter(v => v && v.firstChoice && v.secondChoice).length;
+            if (done === CATEGORIES.length) completedVoters++;
+            Object.values(votes).forEach(v => {
+                if (v && v.firstChoice) totalVotes++;
+                if (v && v.secondChoice) totalVotes++;
             });
         });
 
         return {
-            totalPlayers: totalPlayers,
-            votedPlayers: votedPlayers,
+            totalPlayers,
+            votedPlayers,
             pendingPlayers: totalPlayers - votedPlayers,
             completionRate: totalPlayers > 0 ? Math.round((completedVoters / totalPlayers) * 100) : 0,
-            totalVotes: totalVotes
+            totalVotes
         };
     }
 
-    /**
-     * Exporta todos os dados para backup (apenas admin)
-     * @returns {Object} Dados completos
-     */
     function exportData() {
-        if (!isAdmin()) {
-            console.error('Acesso negado: apenas administradores');
-            return null;
-        }
-
-        return {
-            timestamp: new Date().toISOString(),
-            votes: load(KEYS.VOTES, {}),
-            voters: load(KEYS.VOTERS, {}),
-            stats: getStats()
-        };
+        if (!isAdmin()) return null;
+        return { timestamp: new Date().toISOString(), voters: votersCache, stats: getStats() };
     }
 
-    /**
-     * Limpa todos os votos (apenas admin)
-     * @returns {boolean}
-     */
     function clearVotes() {
-        if (!isAdmin()) {
-            console.error('Acesso negado: apenas administradores');
-            return false;
-        }
-
-        remove(KEYS.VOTES);
-        remove(KEYS.VOTERS);
+        if (!isAdmin()) return false;
+        Object.keys(votersCache).forEach(uid => {
+            db.collection(COL).doc(uid).delete().catch(console.error);
+        });
+        votersCache = {};
         return true;
     }
 
-    // API pública
+    function clearAll() { logout(); }
+
     return {
-        // Autenticação
-        authenticate,
-        getCurrentUser,
-        isLoggedIn,
-        isAdmin,
-        logout,
-        
-        // Votos
-        vote,
-        removeVote,
-        hasVotedInCategory,
-        hasCompletedCategory,
-        getVote,
-        getUserVotes,
-        getVoteCount,
-        hasCompletedVoting,
-        
-        // Admin
-        getAllVotes,
-        getAllVoters,
-        getResults,
-        getStats,
-        exportData,
-        clearVotes,
-        getAuthError,
-        
-        // Utilitários
-        clearAll
+        initFirestore, refreshVoters,
+        authenticate, getCurrentUser, isLoggedIn, isAdmin, logout,
+        vote, removeVote, hasVotedInCategory, hasCompletedCategory,
+        getVote, getUserVotes, getVoteCount, hasCompletedVoting,
+        getAllVotes, getAllVoters, getResults, getStats,
+        exportData, clearVotes, getAuthError, clearAll
     };
 })();
 
-// Exportar para uso global
-if (typeof window !== 'undefined') {
-    window.Storage = Storage;
-}
+if (typeof window !== 'undefined') window.Storage = Storage;

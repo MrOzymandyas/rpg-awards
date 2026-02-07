@@ -53,9 +53,10 @@ const Admin = (function() {
     }
 
     /**
-     * Atualiza dados do painel
+     * Atualiza dados do painel (busca dados frescos do Firestore)
      */
-    function refreshData() {
+    async function refreshData() {
+        await Storage.refreshVoters();
         UI.updateAdminPanel();
         UI.showToast('Dados atualizados', 'success');
     }

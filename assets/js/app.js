@@ -13,14 +13,18 @@
     /**
      * Inicializa aplicação
      */
-    function init() {
+    async function init() {
         console.log(`${APP_NAME} v${APP_VERSION} - Inicializando...`);
 
-        // Verifica suporte a localStorage
         if (!checkLocalStorageSupport()) {
             showError('Seu navegador não suporta armazenamento local necessário para o sistema de votação.');
             return;
         }
+
+        const loadStart = Date.now();
+
+        // Carrega dados do Firestore
+        await Storage.initFirestore();
 
         // Inicializa módulos
         initializeModules();
@@ -31,9 +35,13 @@
         // Verifica sessão existente
         checkExistingSession();
 
-        // Inicia loading
-        UI.simulateLoading();
+        // Garante tempo mínimo de loading para UX
+        const elapsed = Date.now() - loadStart;
+        if (elapsed < 2500) {
+            await new Promise(r => setTimeout(r, 2500 - elapsed));
+        }
 
+        UI.hideLoading();
         console.log(`${APP_NAME} inicializado com sucesso`);
     }
 
@@ -184,10 +192,8 @@
         if (user) {
             console.log(`Sessão existente encontrada: ${user.name}`);
             
-            // Verifica se sessão não expirou (24 horas)
             const loginTime = new Date(user.loginTime);
-            const now = new Date();
-            const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+            const hoursSinceLogin = (new Date() - loginTime) / (1000 * 60 * 60);
 
             if (hoursSinceLogin > 24) {
                 console.log('Sessão expirada');
@@ -195,14 +201,11 @@
                 return;
             }
 
-            // Redireciona para tela apropriada
-            setTimeout(() => {
-                if (user.role === 'admin') {
-                    UI.showAdmin();
-                } else {
-                    UI.showDashboard();
-                }
-            }, 100);
+            if (user.role === 'admin') {
+                UI.showAdmin();
+            } else {
+                UI.showDashboard();
+            }
         }
     }
 

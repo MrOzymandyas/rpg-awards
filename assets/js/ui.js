@@ -993,12 +993,14 @@ const UI = (function() {
     return {
         init,
         simulateLoading,
+        hideLoading,
         showLogin,
         showDashboard,
         showSummary,
         showAdmin,
         showToast,
         updateDashboard,
+        updateAdminPanel,
         setupEventListeners
     };
 })();
