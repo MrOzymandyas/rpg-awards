@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Awards II - A Cerimônia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-container">
+            <div class="loading-emblem">
+                <svg viewBox="0 0 100 100" class="emblem">
+                    <polygon points="50,5 61,40 95,40 68,60 79,95 50,75 21,95 32,60 5,40 39,40" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+            </div>
+            <p class="loading-text">Escuridão... Interrompida apenas por pontos intermitentes de luz.</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <main id="login-screen" class="login-screen active">
+        <div class="ceremony-backdrop">
+            <div class="ambient-light"></div>
+            <div class="particles"></div>
+            <div class="constellation-lines"></div>
+        </div>
+        
+        <div class="login-container">
+            <header class="ceremony-header fade-in">
+                <div class="emblem-wrapper">
+                    <svg viewBox="0 0 100 100" class="star-emblem">
+                        <polygon points="50,5 61,40 95,40 68,60 79,95 50,75 21,95 32,60 5,40 39,40" />
+                    </svg>
+                </div>
+                <h1 class="ceremony-title">
+                    <span class="title-superscript">A Cerimônia</span>
+                    <span class="title-main">RPG Awards II</span>
+                    <span class="title-year">2025</span>
+                </h1>
+                <p class="ceremony-subtitle">Os lordes se reúnem mais uma vez para prestigiar seus bardos.</p>
+            </header>
+
+            <form id="login-form" class="login-form slide-up">
+                <div class="input-elegante">
+                    <input type="text" id="player-id" required autocomplete="off" placeholder=" ">
+                    <label for="player-id">Nome do Nobre</label>
+                    <div class="input-line"></div>
+                    <div class="input-highlight"></div>
+                </div>
+                
+                <div class="input-elegante">
+                    <input type="password" id="player-key" required placeholder=" ">
+                    <label for="player-key">Senha de Acesso</label>
+                    <div class="input-line"></div>
+                    <div class="input-highlight"></div>
+                </div>
+
+                <button type="submit" class="btn-ceremony">
+                    <span class="btn-text">Entrar na Cerimônia</span>
+                    <span class="btn-shimmer"></span>
+                </button>
+
+                <p class="login-hint">Apenas nobres convidados podem participar desta cerimônia</p>
+            </form>
+        </div>
+    </main>
+
+    <!-- Voting Dashboard -->
+    <div id="voting-dashboard" class="voting-dashboard">
+        <!-- Navigation -->
+        <nav class="ceremony-nav">
+            <div class="nav-brand">
+                <svg viewBox="0 0 100 100" class="nav-emblem">
+                    <polygon points="50,5 61,40 95,40 68,60 79,95 50,75 21,95 32,60 5,40 39,40" />
+                </svg>
+                <span class="nav-title">RPG Awards</span>
+            </div>
+            <div class="player-info">
+                <span class="player-greeting">Bem-vindo,</span>
+                <span class="player-name" id="player-name-display">Aventureiro</span>
+            </div>
+            <button id="logout-btn" class="btn-logout">
+                <span>Sair</span>
+            </button>
+        </nav>
+
+        <!-- Progress Tracker -->
+        <div class="progress-tracker">
+            <div class="progress-header">
+                <h2 class="progress-title">Sua Jornada de Votação</h2>
+                <span class="progress-count"><span id="votes-completed">0</span> / <span id="total-categories">9</span></span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="categories-container">
+            <div class="categories-grid" id="categories-grid">
+                <!-- Categories will be populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Voting Modal - Tarot Experience -->
+    <div id="voting-modal" class="voting-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <!-- Category Navigation -->
+            <nav class="category-nav">
+                <button class="nav-arrow nav-prev" id="prev-category" title="Categoria anterior">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                
+                <div class="category-nav-info">
+                    <span class="category-number" id="modal-category-number"></span>
+                    <h2 class="category-title" id="modal-category-title"></h2>
+                    <p class="category-description" id="modal-category-desc"></p>
+                </div>
+                
+                <button class="nav-arrow nav-next" id="next-category" title="Próxima categoria">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+                
+                <button class="modal-close" id="modal-close">&times;</button>
+            </nav>
+
+            <div class="nominees-grid" id="nominees-grid">
+                <!-- Tarot cards will be populated by JS -->
+            </div>
+        </div>
+        
+        <!-- Player's Deck - Cards chosen -->
+        <div class="player-deck" id="player-deck">
+            <div class="deck-cards" id="deck-cards">
+                <!-- Selected cards will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Screen -->
+    <div id="summary-screen" class="summary-screen">
+        <div class="summary-backdrop">
+            <div class="ambient-light"></div>
+            <div class="confetti-container"></div>
+        </div>
+        
+        <div class="summary-container">
+            <header class="summary-header">
+                <div class="emblem-wrapper">
+                    <svg viewBox="0 0 100 100" class="star-emblem">
+                        <polygon points="50,5 61,40 95,40 68,60 79,95 50,75 21,95 32,60 5,40 39,40" />
+                    </svg>
+                </div>
+                <h1 class="summary-title">Sua Cédula Está Completa</h1>
+                <p class="summary-subtitle">Obrigado por participar desta cerimônia memorável</p>
+            </header>
+
+            <div class="voting-summary" id="voting-summary">
+                <!-- Summary cards will be populated by JS -->
+            </div>
+
+            <div class="summary-actions">
+                <button id="submit-votes-btn" class="btn-ceremony btn-final">
+                    <span class="btn-text">Confirmar Votos</span>
+                    <span class="btn-shimmer"></span>
+                </button>
+                <button id="review-votes-btn" class="btn-outline">
+                    Revisar Escolhas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <nav class="admin-nav">
+            <div class="admin-brand">
+                <span class="admin-icon">👑</span>
+                <span>Painel do Mestre</span>
+            </div>
+            <button id="admin-logout" class="btn-logout">Sair</button>
+        </nav>
+
+        <div class="admin-content">
+            <h1 class="admin-title">Resultados da Votação</h1>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value" id="total-voters">0</span>
+                    <span class="stat-label">Votantes</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="completion-rate">0%</span>
+                    <span class="stat-label">Concluídos</span>
+                </div>
+            </div>
+
+            <div class="results-section" id="admin-results">
+                <!-- Results will be populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/voting.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
