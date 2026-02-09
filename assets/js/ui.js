@@ -42,7 +42,8 @@ const UI = (function() {
             nomineesGrid: document.getElementById('nominees-grid'),
             prevCategory: document.getElementById('prev-category'),
             nextCategory: document.getElementById('next-category'),
-            deckCards: document.getElementById('deck-cards'),
+            deckCount: document.getElementById('deck-count'),
+            deckTotal: document.getElementById('deck-total'),
             
             // Summary
             summaryScreen: document.getElementById('summary-screen'),
@@ -200,28 +201,26 @@ const UI = (function() {
     }
 
     /**
-     * Renderiza grid de categorias
+     * Renderiza grid de categorias (cria apenas na 1a vez, depois atualiza in-place)
      */
     function renderCategories() {
         if (!elements.categoriesGrid) return;
 
-        elements.categoriesGrid.innerHTML = '';
+        const existingCards = elements.categoriesGrid.querySelectorAll('.category-card');
+        const needsFullRender = existingCards.length !== CATEGORIES.length;
 
-        CATEGORIES.forEach(category => {
+        if (needsFullRender) {
+            elements.categoriesGrid.innerHTML = '';
+        }
+
+        CATEGORIES.forEach((category, idx) => {
             const isComplete = Storage.hasCompletedCategory(category.id);
             const hasPartial = Storage.hasVotedInCategory(category.id) && !isComplete;
             const userVote = Storage.getVote(category.id);
             
-            // Pega nomes dos escolhidos
             const firstNominee = userVote?.firstChoice ? getNomineeById(category.id, userVote.firstChoice.nomineeId) : null;
             const secondNominee = userVote?.secondChoice ? getNomineeById(category.id, userVote.secondChoice.nomineeId) : null;
 
-            const card = document.createElement('div');
-            card.className = 'category-card';
-            if (isComplete) card.classList.add('voted');
-            if (hasPartial) card.classList.add('partial');
-            card.dataset.categoryId = category.id;
-            
             // Monta status e escolhas
             let statusLabel = 'Clique para votar';
             let choicesHtml = '';
@@ -253,19 +252,43 @@ const UI = (function() {
                     `;
                 }
             }
-            
-            card.innerHTML = `
-                <span class="category-number">CATEGORIA ${category.number}</span>
-                <h3 class="category-card-title">${category.title}</h3>
-                <p class="category-card-desc">${category.description}</p>
+
+            const statusHtml = `
                 <div class="category-status ${isComplete ? 'voted' : ''} ${hasPartial ? 'partial' : ''}">
                     <span class="status-label">${statusLabel}</span>
                     ${choicesHtml}
                 </div>
             `;
 
-            card.addEventListener('click', () => openVotingModal(category));
-            elements.categoriesGrid.appendChild(card);
+            if (needsFullRender) {
+                // Primeira renderização: cria os cards
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                if (isComplete) card.classList.add('voted');
+                if (hasPartial) card.classList.add('partial');
+                card.dataset.categoryId = category.id;
+                
+                card.innerHTML = `
+                    <span class="category-number">CATEGORIA ${category.number}</span>
+                    <h3 class="category-card-title">${category.title}</h3>
+                    <p class="category-card-desc">${category.description}</p>
+                    ${statusHtml}
+                `;
+
+                card.addEventListener('click', () => openVotingModal(category));
+                elements.categoriesGrid.appendChild(card);
+            } else {
+                // Atualização in-place: apenas muda classes e status
+                const card = existingCards[idx];
+                card.classList.toggle('voted', isComplete);
+                card.classList.toggle('partial', hasPartial);
+                
+                const statusEl = card.querySelector('.category-status');
+                if (statusEl) {
+                    statusEl.className = `category-status ${isComplete ? 'voted' : ''} ${hasPartial ? 'partial' : ''}`;
+                    statusEl.innerHTML = `<span class="status-label">${statusLabel}</span>${choicesHtml}`;
+                }
+            }
         });
     }
 
@@ -337,16 +360,33 @@ const UI = (function() {
     }
 
     /**
-     * Navega para categoria anterior
+     * Transição suave entre categorias (fade out -> troca -> fade in)
      */
-    function goToPrevCategory() {
-        if (currentCategoryIndex > 0) {
-            currentCategoryIndex--;
+    function transitionCategory(newIndex) {
+        const grid = elements.nomineesGrid;
+        if (!grid) return;
+
+        grid.style.transition = 'opacity 0.15s ease';
+        grid.style.opacity = '0';
+
+        setTimeout(() => {
+            currentCategoryIndex = newIndex;
             currentCategory = CATEGORIES[currentCategoryIndex];
             updateCategoryDisplay(currentCategory);
             renderNominees(currentCategory);
             updateNavButtons();
-            renderDeck(); // Atualiza deck ao mudar de categoria
+            renderDeck();
+
+            grid.style.opacity = '1';
+        }, 150);
+    }
+
+    /**
+     * Navega para categoria anterior
+     */
+    function goToPrevCategory() {
+        if (currentCategoryIndex > 0) {
+            transitionCategory(currentCategoryIndex - 1);
         }
     }
 
@@ -355,12 +395,7 @@ const UI = (function() {
      */
     function goToNextCategory() {
         if (currentCategoryIndex < CATEGORIES.length - 1) {
-            currentCategoryIndex++;
-            currentCategory = CATEGORIES[currentCategoryIndex];
-            updateCategoryDisplay(currentCategory);
-            renderNominees(currentCategory);
-            updateNavButtons();
-            renderDeck(); // Atualiza deck ao mudar de categoria
+            transitionCategory(currentCategoryIndex + 1);
         } else {
             // Se era a última categoria e completou, mostra resumo
             if (Storage.hasCompletedVoting()) {
@@ -382,78 +417,26 @@ const UI = (function() {
         updateDashboard();
     }
 
-    // ==================== DECK ====================
+    // ==================== DECK COUNTER ====================
 
     /**
-     * Renderiza o deck de cartas na parte inferior (apenas visual)
-     * Mostra 1º e 2º lugar de cada categoria votada
+     * Atualiza o contador do deck (categorias completas / total)
      */
     function renderDeck() {
-        if (!elements.deckCards) return;
+        if (!elements.deckCount || !elements.deckTotal) return;
 
-        elements.deckCards.innerHTML = '';
         const userVotes = Storage.getUserVotes();
-        
-        // Coleta todas as cartas (1º e 2º lugar de cada categoria)
-        const allCards = [];
-        
+        let completedCategories = 0;
+
         Object.keys(userVotes).forEach(categoryId => {
             const vote = userVotes[categoryId];
-            const category = CATEGORIES.find(c => c.id === categoryId);
-            
-            if (vote.firstChoice) {
-                const nominee = getNomineeById(categoryId, vote.firstChoice.nomineeId);
-                if (nominee && category) {
-                    allCards.push({ nominee, place: 'first' });
-                }
-            }
-            
-            if (vote.secondChoice) {
-                const nominee = getNomineeById(categoryId, vote.secondChoice.nomineeId);
-                if (nominee && category) {
-                    allCards.push({ nominee, place: 'second' });
-                }
+            if (vote.firstChoice && vote.secondChoice) {
+                completedCategories++;
             }
         });
 
-        const totalCards = allCards.length;
-        if (totalCards === 0) return;
-
-        // Cartas empilhadas com leve rotação (apenas visual)
-        const maxAngle = Math.min(totalCards * 2, 35);
-        const startAngle = -maxAngle / 2;
-        const angleStep = totalCards > 1 ? maxAngle / (totalCards - 1) : 0;
-
-        allCards.forEach((cardData, index) => {
-            const { nominee, place } = cardData;
-            
-            const angle = startAngle + (angleStep * index);
-            const xOffset = (index - totalCards / 2) * 15; // Pequeno offset horizontal
-            
-            const deckCard = document.createElement('div');
-            deckCard.className = `deck-card deck-card-${place}`;
-            deckCard.style.transform = `translateX(${xOffset}px) rotate(${angle}deg)`;
-            deckCard.style.zIndex = index + 1;
-
-            const imageUrl = nominee.image || '';
-            const imageContent = imageUrl 
-                ? `<img src="${imageUrl}" alt="${nominee.name}">`
-                : '✦';
-
-            const placeLabel = place === 'first' ? '1º' : '2º';
-
-            deckCard.innerHTML = `
-                <div class="card-mini">
-                    <div class="card-mini-place">${placeLabel}</div>
-                    <div class="card-mini-image">${imageContent}</div>
-                    <div class="card-mini-info">
-                        <div class="card-mini-name">${nominee.name}</div>
-                    </div>
-                </div>
-            `;
-
-            elements.deckCards.appendChild(deckCard);
-        });
+        elements.deckCount.textContent = completedCategories;
+        elements.deckTotal.textContent = CATEGORIES.length;
     }
 
     /**
@@ -647,7 +630,7 @@ const UI = (function() {
                         // Vai para próxima categoria automaticamente
                         goToNextCategory();
                     }
-                }, 800);
+                }, 1500);
             }
             return;
         }
@@ -685,7 +668,7 @@ const UI = (function() {
                 || `https://placehold.co/60x60/1a1a25/808080?text=${secondNominee?.name?.charAt(0) || '?'}`;
 
             card.innerHTML = `
-                <span class="summary-card-number">${category.number}</span>
+                <span class="summary-card-number">#${String(category.number).padStart(2, '0')}</span>
                 <div class="summary-card-info">
                     <span class="summary-card-category">${category.title}</span>
                     <div class="summary-card-choices">

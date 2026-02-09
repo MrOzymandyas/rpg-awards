@@ -188,15 +188,21 @@ body {
    ============================================ */
 .login-screen {
     min-height: 100vh;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     padding: var(--space-xl);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    pointer-events: none;
 }
 
 .login-screen.active {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .ceremony-backdrop {
@@ -913,7 +919,7 @@ body {
 .modal-content {
     position: absolute;
     inset: 0;
-    bottom: 140px; /* Space for deck */
+    bottom: 50px; /* Space for deck counter */
     z-index: 1;
     display: flex;
     flex-direction: column;
@@ -1032,7 +1038,6 @@ body {
     justify-content: center;
     gap: var(--space-xl);
     padding: var(--space-xl);
-    perspective: 2000px;
     width: 100%;
 }
 
@@ -1042,52 +1047,20 @@ body {
     width: 240px;
     height: 380px;
     cursor: pointer;
-    transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     flex-shrink: 0;
+    will-change: transform;
 }
 
 .nominee-card:hover {
-    transform: translateY(-20px) scale(1.05);
+    transform: translateY(-8px);
 }
 
-.nominee-card.selected {
-    animation: cardSelected 0.8s ease forwards;
-}
-
-@keyframes cardSelected {
-    0% { transform: translateY(-20px) scale(1.05); }
-    25% { transform: translateY(-40px) scale(1.1) rotateY(180deg); }
-    50% { transform: translateY(-60px) scale(1.15) rotateY(360deg); }
-    75% { transform: translateY(-30px) scale(1.08) rotateY(540deg); }
-    100% { transform: translateY(0) scale(1) rotateY(720deg); }
-}
-
-.nominee-card.selected.to-deck {
-    animation: cardToDeck 1s ease forwards;
-}
-
-@keyframes cardToDeck {
-    0% { 
-        transform: translateY(0) scale(1); 
-        opacity: 1;
-    }
-    50% { 
-        transform: translateY(-100px) translateX(50vw) scale(0.5) rotateY(360deg); 
-        opacity: 0.8;
-    }
-    100% { 
-        transform: translateY(-200px) translateX(80vw) scale(0.2) rotateY(720deg); 
-        opacity: 0;
-    }
-}
-
-/* Card Inner - For flip effect */
+/* Card Inner */
 .card-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    transform-style: preserve-3d;
     border-radius: var(--radius-lg);
 }
 
@@ -1095,7 +1068,6 @@ body {
 .card-front {
     position: absolute;
     inset: 0;
-    backface-visibility: hidden;
     background: linear-gradient(180deg, 
         var(--color-bg-tertiary) 0%, 
         var(--color-bg-card) 100%);
@@ -1104,25 +1076,22 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 
-        0 10px 40px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nominee-card:hover .card-front {
     border-color: var(--color-gold-muted);
     box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.6),
-        0 0 30px rgba(212, 175, 55, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 15px 50px rgba(0, 0, 0, 0.6),
+        0 0 25px rgba(212, 175, 55, 0.15);
 }
 
 .nominee-card.selected .card-front {
     border-color: var(--color-gold-primary);
     box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.6),
-        0 0 50px rgba(212, 175, 55, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 15px 50px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(212, 175, 55, 0.3);
 }
 
 /* Card Decorative Frame */
@@ -1159,11 +1128,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--transition-slow);
-}
-
-.nominee-card:hover .nominee-image img {
-    transform: scale(1.1);
+    pointer-events: none;
 }
 
 /* Card Info - Bottom section */
@@ -1295,188 +1260,52 @@ body {
 }
 
 /* ============================================
-   PLAYER'S DECK - Bottom Card Fan
+   DECK COUNTER - Bottom Bar
    ============================================ */
 .player-deck {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 140px;
+    height: 50px;
     z-index: 5;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.player-deck::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(to top, 
+    align-items: center;
+    background: linear-gradient(to top,
         rgba(10, 10, 15, 0.95) 0%,
-        rgba(10, 10, 15, 0.7) 50%,
-        transparent 100%);
-    pointer-events: none;
+        rgba(10, 10, 15, 0.8) 100%);
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
 }
 
-.deck-cards {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 100%;
-    width: 100%;
-    max-width: 100vw;
-    overflow: visible;
-}
-
-/* Individual deck card (visual only) */
-.deck-card {
-    position: absolute;
-    width: 100px;
-    height: 160px;
-    bottom: -60px; /* Half hidden */
-    transform-origin: bottom center;
-    pointer-events: none;
-}
-
-.deck-card .card-mini {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, 
-        var(--color-bg-tertiary) 0%, 
-        var(--color-bg-card) 100%);
-    border: 2px solid var(--color-gold-primary);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: 
-        0 -5px 20px rgba(0, 0, 0, 0.5),
-        0 0 20px rgba(212, 175, 55, 0.2);
-}
-
-.deck-card .card-mini-image {
-    height: 60%;
-    background: linear-gradient(180deg, 
-        rgba(212, 175, 55, 0.1) 0%, 
-        transparent 100%);
+.deck-counter {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: rgba(212, 175, 55, 0.3);
-}
-
-.deck-card .card-mini-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.deck-card .card-mini-info {
-    height: 40%;
-    padding: var(--space-xs);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: rgba(10, 10, 15, 0.9);
-}
-
-.deck-card .card-mini-name {
+    gap: var(--space-sm);
     font-family: var(--font-display);
-    font-size: 0.55rem;
     color: var(--color-gold-primary);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
-.deck-card .card-mini-category {
-    font-size: 0.5rem;
-    color: var(--color-text-muted);
-    margin-top: 2px;
+.deck-counter-icon {
+    font-size: 1.1rem;
+    opacity: 0.8;
 }
 
-/* Place badge on deck card */
-.deck-card .card-mini-place {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.deck-counter-text {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+}
+
+.deck-counter-num {
+    color: var(--color-gold-primary);
     font-family: var(--font-display);
-    font-size: 0.5rem;
-    font-weight: 700;
-    z-index: 5;
-}
-
-.deck-card-first .card-mini-place {
-    background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
-    color: var(--color-bg-primary);
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
-}
-
-.deck-card-second .card-mini-place {
-    background: linear-gradient(135deg, #c0c0c0 0%, #808080 100%);
-    color: var(--color-bg-primary);
-    box-shadow: 0 0 6px rgba(192, 192, 192, 0.4);
-}
-
-/* Different border colors for 1st and 2nd */
-.deck-card-first .card-mini {
-    border-color: #ffd700;
-}
-
-.deck-card-second .card-mini {
-    border-color: #a0a0a0;
-}
-
-.deck-card-second {
-    opacity: 0.9;
-}
-
-/* Card flying to deck animation */
-@keyframes flyToDeck {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.8;
-        transform: scale(0.5) translateY(100px);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(0.3) translateY(300px);
-    }
-}
-
-.nominee-card.flying-to-deck {
-    animation: flyToDeck 0.6s ease-in forwards;
-}
-
-/* Deck card entrance animation */
-@keyframes deckCardEnter {
-    0% {
-        opacity: 0;
-        transform: translateY(-100px) scale(0.5);
-    }
-    100% {
-        opacity: 1;
-    }
+    font-weight: 600;
 }
 
 /* ============================================
@@ -1558,10 +1387,19 @@ body {
 }
 
 .summary-card-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.25);
     font-family: var(--font-display);
-    font-size: 0.75rem;
-    color: var(--color-gold-muted);
-    letter-spacing: 0.1em;
+    font-size: 0.65rem;
+    color: var(--color-gold-primary);
+    letter-spacing: 0;
+    flex-shrink: 0;
 }
 
 .summary-card-info {
@@ -2029,17 +1867,11 @@ body {
     }
 
     .player-deck {
-        height: 160px;
+        height: 50px;
     }
 
     .modal-content {
-        bottom: 160px;
-    }
-
-    .deck-card {
-        width: 120px;
-        height: 190px;
-        bottom: -70px;
+        bottom: 50px;
     }
 }
 
@@ -2067,21 +1899,11 @@ body {
     }
 
     .player-deck {
-        height: 180px;
+        height: 50px;
     }
 
     .modal-content {
-        bottom: 180px;
-    }
-
-    .deck-card {
-        width: 140px;
-        height: 220px;
-        bottom: -80px;
-    }
-
-    .deck-card .card-mini-name {
-        font-size: 0.65rem;
+        bottom: 50px;
     }
 
     .modal-header .category-title {
@@ -2146,25 +1968,11 @@ body {
     }
 
     .player-deck {
-        height: 120px;
+        height: 50px;
     }
 
     .modal-content {
-        bottom: 120px;
-    }
-
-    .deck-card {
-        width: 85px;
-        height: 135px;
-        bottom: -50px;
-    }
-
-    .deck-card .card-mini-name {
-        font-size: 0.5rem;
-    }
-
-    .deck-card .card-mini-category {
-        font-size: 0.45rem;
+        bottom: 50px;
     }
 
     .category-nav {
@@ -2299,27 +2107,21 @@ body {
         right: var(--space-sm);
     }
 
-    /* Deck - Mobile */
+    /* Deck Counter - Mobile */
     .player-deck {
-        height: 100px;
+        height: 44px;
     }
 
     .modal-content {
-        bottom: 100px;
+        bottom: 44px;
     }
 
-    .deck-card {
-        width: 65px;
-        height: 105px;
-        bottom: -40px;
+    .deck-counter {
+        font-size: 0.75rem;
     }
 
-    .deck-card .card-mini-name {
-        font-size: 0.45rem;
-    }
-
-    .deck-card .card-mini-category {
-        display: none;
+    .deck-counter-text {
+        font-size: 0.7rem;
     }
 
     /* Tarot Cards - Mobile */
