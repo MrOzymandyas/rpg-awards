@@ -1593,6 +1593,13 @@ body {
     margin-bottom: var(--space-3xl);
 }
 
+.admin-actions {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-2xl);
+}
+
 .stat-card {
     background: var(--gradient-card);
     border: 1px solid rgba(212, 175, 55, 0.1);

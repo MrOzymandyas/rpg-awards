@@ -643,6 +643,22 @@ const UI = (function() {
         }
     }
 
+    /**
+     * Abre uma categoria diretamente a partir do resumo
+     * @param {string} categoryId - ID da categoria
+     */
+    function openCategoryFromSummary(categoryId) {
+        const category = CATEGORIES.find(c => c.id === categoryId);
+        if (!category) return;
+
+        showDashboard();
+
+        // Aguarda o dashboard montar para abrir o modal no contexto correto.
+        setTimeout(() => {
+            openVotingModal(category);
+        }, 120);
+    }
+
     // ==================== SUMMARY ====================
 
     /**
@@ -661,6 +677,9 @@ const UI = (function() {
 
             const card = document.createElement('div');
             card.className = 'summary-card';
+            card.tabIndex = 0;
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `Revisar categoria ${category.number}: ${category.title}`);
 
             const firstImageUrl = firstNominee?.image 
                 || `https://placehold.co/80x80/1a1a25/d4af37?text=${firstNominee?.name?.charAt(0) || '?'}`;
@@ -691,6 +710,14 @@ const UI = (function() {
                     </div>
                 </div>
             `;
+
+            card.addEventListener('click', () => openCategoryFromSummary(category.id));
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openCategoryFromSummary(category.id);
+                }
+            });
 
             elements.votingSummary.appendChild(card);
         });
@@ -922,6 +949,30 @@ const UI = (function() {
      * Handler de submissão final
      */
     function handleSubmitVotes() {
+        const hasValidationModule = typeof Voting !== 'undefined' && typeof Voting.validateAllVotes === 'function';
+
+        if (hasValidationModule) {
+            const validation = Voting.validateAllVotes();
+            if (!validation.valid) {
+                const missingCount = validation.missing?.length || 0;
+                const plural = missingCount === 1 ? 'categoria pendente' : 'categorias pendentes';
+                showToast(`Ainda faltam ${missingCount} ${plural}.`, 'warning');
+
+                const firstMissingTitle = validation.missing?.[0];
+                const firstMissingCategory = CATEGORIES.find(c => c.title === firstMissingTitle);
+                if (firstMissingCategory) {
+                    openCategoryFromSummary(firstMissingCategory.id);
+                } else {
+                    showDashboard();
+                }
+                return;
+            }
+        } else if (!Storage.hasCompletedVoting()) {
+            showToast('Ainda há categorias pendentes antes de confirmar.', 'warning');
+            showDashboard();
+            return;
+        }
+
         showToast('Seus votos foram confirmados! Obrigado por participar.', 'success');
         
         // Efeito de confete

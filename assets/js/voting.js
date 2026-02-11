@@ -228,16 +228,27 @@ const Voting = (function() {
 
         CATEGORIES.forEach(category => {
             const vote = userVotes[category.id];
-            const nominee = vote ? 
-                (NOMINEES[category.id] || []).find(n => n.id === vote.nomineeId) : 
-                null;
+            const nominees = NOMINEES[category.id] || [];
+            const firstNominee = vote?.firstChoice
+                ? nominees.find(n => n.id === vote.firstChoice.nomineeId) || null
+                : null;
+            const secondNominee = vote?.secondChoice
+                ? nominees.find(n => n.id === vote.secondChoice.nomineeId) || null
+                : null;
+            const hasFirstChoice = !!vote?.firstChoice;
+            const hasSecondChoice = !!vote?.secondChoice;
+            const hasAnyVote = hasFirstChoice || hasSecondChoice;
+            const hasCompleteVote = hasFirstChoice && hasSecondChoice;
 
             summary.push({
                 category: category,
-                hasVoted: !!vote,
+                hasVoted: hasAnyVote,
+                hasCompleteVote: hasCompleteVote,
                 vote: vote,
-                nominee: nominee,
-                timestamp: vote?.timestamp
+                firstNominee: firstNominee,
+                secondNominee: secondNominee,
+                firstTimestamp: vote?.firstChoice?.timestamp || null,
+                secondTimestamp: vote?.secondChoice?.timestamp || null
             });
         });
 
@@ -250,13 +261,13 @@ const Voting = (function() {
      */
     function validateAllVotes() {
         const summary = getVotingSummary();
-        const missingVotes = summary.filter(s => !s.hasVoted);
+        const incompleteVotes = summary.filter(s => !s.hasCompleteVote);
         
-        if (missingVotes.length > 0) {
+        if (incompleteVotes.length > 0) {
             return {
                 valid: false,
-                missing: missingVotes.map(s => s.category.title),
-                message: `Faltam ${missingVotes.length} voto(s)`
+                missing: incompleteVotes.map(s => s.category.title),
+                message: `Faltam ${incompleteVotes.length} categoria(s) para concluir`
             };
         }
 
@@ -285,8 +296,11 @@ const Voting = (function() {
             },
             votes: summary.map(s => ({
                 category: s.category.title,
-                choice: s.nominee?.name || 'Não votado',
-                timestamp: s.timestamp
+                firstChoice: s.firstNominee?.name || 'Não votado',
+                secondChoice: s.secondNominee?.name || 'Não votado',
+                isComplete: s.hasCompleteVote,
+                firstTimestamp: s.firstTimestamp,
+                secondTimestamp: s.secondTimestamp
             }))
         };
     }
