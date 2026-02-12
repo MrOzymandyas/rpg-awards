@@ -17,7 +17,7 @@ const PLAYERS = [
     { id: 'ADMIN', key: 'Ind0105bet@167847', name: 'Mestre do Jogo', title: 'Grão-Mestre da Cerimônia', greeting: 'Bem-vindo, Grão-Mestre', role: 'admin' }
 ];
 
-// Categorias de votação - RPG Awards 2024
+// Categorias de votacao - RPG Awards 2025
 const CATEGORIES = [
     {
         id: 'melhor-npc',
@@ -30,320 +30,278 @@ const CATEGORIES = [
         id: 'melhor-aventura',
         number: '2',
         title: 'Melhor Aventura',
-        description: 'As aventuras, histórias e caminhos que trilhamos juntos.',
+        description: 'As aventuras, historias e caminhos que trilhamos juntos.',
         type: 'scene'
     },
     {
         id: 'melhor-personagem',
         number: '3',
-        title: 'Melhor Personagem Jogável',
-        description: 'As máscaras que vestimos para nos tornarmos mais de nós mesmos.',
+        title: 'Melhor Personagem Jogavel',
+        description: 'As mascaras que vestimos para nos tornarmos mais de nos mesmos.',
         type: 'npc'
     },
     {
-        id: 'melhor-sistema',
-        number: '4',
-        title: 'Melhor Sistema',
-        description: 'Regras, regras, regras... para manter o jogo jogável.',
-        type: 'quote'
-    },
-    {
         id: 'melhor-vilao',
-        number: '5',
-        title: 'Melhor Vilão',
-        description: 'Os antagonistas que nos dão ódio mas também o que fazer.',
+        number: '4',
+        title: 'Melhor Vilao',
+        description: 'Os antagonistas que nos dao odio mas tambem o que fazer.',
         type: 'npc'
     },
     {
         id: 'medalha-trump',
-        number: '6',
-        title: 'Medalha Trump de Mão Peluda',
+        number: '5',
+        title: 'Medalha Trump de Mao Peluda',
         description: '"Como assim pedras caem e todos morrem?".',
         type: 'scene'
     },
     {
-        id: 'centro-jena',
-        number: '7',
-        title: 'Centro Jena de Aprendizado.',
-        description: 'A regra é clara...  não pode narrar antes de rolar.',
-        type: 'scene'
-    },
-    {
         id: 'vamo-te-pegar',
-        number: '8',
+        number: '6',
         title: 'Vamo Te Pegar na Curva',
-        description: 'TA FUDIDO FILHO DA PUTA QUE EU VO LI PEGAR.',
+        description: 'Ta fudido, filho da puta, que eu vo li pegar.',
         type: 'scene'
     },
     {
         id: 'dark-fantasy',
-        number: '9',
+        number: '7',
         title: 'Muito Dark & Muito Fantasy',
         description: 'Ele fica no canto, observando, quieto e misterioso.',
-        type: 'scene'
+        type: 'npc'
     },
     {
         id: 'premio-neils-bohr',
-        number: '10',
-        title: 'Minúsculidade Quântica',
+        number: '8',
+        title: 'Premio Neils Bohr de Minusculidade Quantica',
         description: 'Quando a singularidade do balanceamento se fez presente.',
         type: 'scene'
     },
     {
         id: 'melhor-ship',
-        number: '11',
+        number: '9',
         title: 'Melhor Ship',
-        description: 'O melhor casal real ou fictício... Are we the gays?.',
+        description: 'O melhor casal real ou ficticio.',
         type: 'npc'
     },
     {
         id: 'morreu-feiao',
-        number: '12',
-        title: 'Morreu Feião',
-        description: 'A morte mais fudida, seja feia, tosca ou brutal.',
+        number: '10',
+        title: 'Morreu Feiao',
+        description: 'A morte mais feia, tosca ou brutal.',
         type: 'scene'
     },
     {
         id: 'premio-titanic',
-        number: '13',
-        title: 'Prêmio Titanic',
-        description: 'Para o plano que parecia infalível... até afundar completamente.',
+        number: '11',
+        title: 'Premio Titanic',
+        description: 'Para o plano que parecia infalivel... ate afundar completamente.',
         type: 'scene'
     },
     {
         id: 'medalha-naruto',
-        number: '14',
-        title: 'Medalha Naruto',
-        description: 'Desculpa amigo não assisto anime.',
+        number: '12',
+        title: 'Naruto',
+        description: 'Naruto.',
         type: 'scene'
     },
     {
         id: 'npc-apepe',
-        number: '15',
-        title: 'NPC Apepé',
+        number: '13',
+        title: 'NPC Apepe',
         description: 'O mais esquisito e claramente neurodivergente.',
         type: 'npc'
     },
     {
         id: 'npc-micao',
-        number: '16',
-        title: 'NPC Micão',
-        description: 'Ele ta fora de posição.',
+        number: '14',
+        title: 'NPC Micao',
+        description: 'Ele esta fora de posicao.',
         type: 'npc'
     },
     {
         id: 'npc-estou-ajudando',
-        number: '17',
+        number: '15',
         title: 'NPC Estou Ajudando',
         description: 'Aquele NPC que tentou ajudar... mas ficou na tentativa.',
         type: 'npc'
     },
     {
         id: 'colirio-capricho',
-        number: '18',
-        title: 'Colírio Capricho',
-        description: 'Quando o personagem gosta de fica te atissano. O mais gatão.',
+        number: '16',
+        title: 'Colirio Capricho',
+        description: 'O mais tesudo, mas sem ser adolescente.',
         type: 'scene'
     },
     {
         id: 'melhor-tilt',
-        number: '19',
+        number: '17',
         title: 'Melhor Tilt',
-        description: 'Aquele momento em que alguém perdeu completamente a compostura.',
+        description: 'Aquele momento em que alguem perdeu completamente a compostura.',
         type: 'scene'
     },
     {
         id: 'pressao-baxo',
-        number: '20',
-        title: 'Pressão Baxo 🌶️',
-        description: 'Tava altamente Spicy. CR Foda-se. Dificuldade Caveira.',
-        type: 'scene'
-    },
-    {
-        id: 'profissao-cutscene',
-        number: '21',
-        title: 'Profissão Cutscene',
-        description: 'Só se garante sem dado. No dado não bota a cara.',
+        number: '18',
+        title: 'Pressao Baxo',
+        description: 'Tava muito spicy.',
         type: 'scene'
     },
     {
         id: 'dento',
-        number: '22',
+        number: '19',
         title: 'Dento',
-        description: 'A npc que se cair algo no chão todo mundo fica esperando pra ver se ela pega.',
+        description: 'A mais dento de todas.',
         type: 'scene'
     },
     {
         id: 'categoria-shiki',
-        number: '23',
+        number: '20',
         title: 'Categoria Shiki',
         description: 'A categoria misteriosa. Apenas o Shiki sabe o que significa. Talvez nem ele.',
         type: 'scene'
     }
 ];
 
-// Indicados/Nomeados por categoria (estrutura para 23 categorias)
+// Indicados/Nomeados por categoria (estrutura para 20 categorias)
 const NOMINEES = {
     'melhor-npc': [
-        { id: 'npc-1', name: 'Indicado 1', origin: 'Campanha', description: 'Descrição do indicado...', image: '' },
-        { id: 'npc-2', name: 'Indicado 2', origin: 'Campanha', description: 'Descrição do indicado...', image: '' },
-        { id: 'npc-3', name: 'Indicado 3', origin: 'Campanha', description: 'Descrição do indicado...', image: '' },
-        { id: 'npc-4', name: 'Indicado 4', origin: 'Campanha', description: 'Descrição do indicado...', image: '' },
-        { id: 'npc-5', name: 'Indicado 5', origin: 'Campanha', description: 'Descrição do indicado...', image: '' }
+        { id: 'npc-essek', name: 'Essek', origin: 'Melhor NPC', description: 'Indicado da categoria.', image: 'assets/images/nominees/melhor-npc/essek.jpg' },
+        { id: 'npc-mako', name: 'Mako', origin: 'Melhor NPC', description: 'Indicado da categoria.', image: 'assets/images/nominees/melhor-npc/mako.jpg' },
+        { id: 'npc-fuligem', name: 'Fuligem', origin: 'Melhor NPC', description: 'Indicado da categoria.', image: 'assets/images/nominees/melhor-npc/fuligem.jpg' },
+        { id: 'npc-kadan', name: 'Kadan', origin: 'Melhor NPC', description: 'Indicado da categoria.', image: 'assets/images/nominees/melhor-npc/kadan.jpg' },
+        { id: 'npc-cesar', name: 'Cesar', origin: 'Melhor NPC', description: 'Indicado da categoria.', image: 'assets/images/nominees/melhor-npc/cesar.jpg' }
     ],
     'melhor-aventura': [
-        { id: 'aventura-1', name: 'Aventura 1', origin: 'Arco I', description: 'Descrição da aventura...', image: '' },
-        { id: 'aventura-2', name: 'Aventura 2', origin: 'Arco II', description: 'Descrição da aventura...', image: '' },
-        { id: 'aventura-3', name: 'Aventura 3', origin: 'Arco III', description: 'Descrição da aventura...', image: '' },
-        { id: 'aventura-4', name: 'Aventura 4', origin: 'Arco IV', description: 'Descrição da aventura...', image: '' },
-        { id: 'aventura-5', name: 'Aventura 5', origin: 'Arco V', description: 'Descrição da aventura...', image: '' }
+        { id: 'aventura-a-corrente-a-ferida-de-burok', name: 'A Corrente', origin: 'Melhor Aventura', description: 'A Ferida de Burok', image: 'assets/images/nominees/melhor-aventura/a-corrente-a-ferida-de-burok.jpg' },
+        { id: 'aventura-taldorei-a-coroa-de-cinzas', name: 'Tal\'Dorei', origin: 'Melhor Aventura', description: 'A Coroa de Cinzas', image: 'assets/images/nominees/melhor-aventura/taldorei-a-coroa-de-cinzas.jpg' },
+        { id: 'aventura-wildemount-hic-irrumabus', name: 'Wildemount', origin: 'Melhor Aventura', description: 'Hic Irrumabus', image: 'assets/images/nominees/melhor-aventura/wildemount-hic-irrumabus.jpg' },
+        { id: 'aventura-theladil-o-trono-vazio', name: 'Theladil', origin: 'Melhor Aventura', description: 'O Trono Vazio', image: 'assets/images/nominees/melhor-aventura/theladil-o-trono-vazio.jpg' },
+        { id: 'aventura-laegar-o-circulo-dourado', name: 'Laegar', origin: 'Melhor Aventura', description: 'O Circulo Dourado', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' }
     ],
     'melhor-personagem': [
-        { id: 'pc-1', name: 'Personagem 1', origin: 'Jogador 1', description: 'Descrição do personagem...', image: '' },
-        { id: 'pc-2', name: 'Personagem 2', origin: 'Jogador 2', description: 'Descrição do personagem...', image: '' },
-        { id: 'pc-3', name: 'Personagem 3', origin: 'Jogador 3', description: 'Descrição do personagem...', image: '' },
-        { id: 'pc-4', name: 'Personagem 4', origin: 'Jogador 4', description: 'Descrição do personagem...', image: '' },
-        { id: 'pc-5', name: 'Personagem 5', origin: 'Jogador 5', description: 'Descrição do personagem...', image: '' }
-    ],
-    'melhor-sistema': [
-        { id: 'sistema-1', name: 'Sistema 1', origin: 'Homebrew', description: 'Descrição do sistema...', image: '' },
-        { id: 'sistema-2', name: 'Sistema 2', origin: 'Homebrew', description: 'Descrição do sistema...', image: '' },
-        { id: 'sistema-3', name: 'Sistema 3', origin: 'Homebrew', description: 'Descrição do sistema...', image: '' },
-        { id: 'sistema-4', name: 'Sistema 4', origin: 'Homebrew', description: 'Descrição do sistema...', image: '' },
-        { id: 'sistema-5', name: 'Sistema 5', origin: 'Homebrew', description: 'Descrição do sistema...', image: '' }
+        { id: 'personagem-hukil', name: 'Hukil', origin: 'Melhor Personagem Jogavel', description: 'Olho de Sangue', image: 'assets/images/nominees/melhor-personagem/hukil.jpg' },
+        { id: 'personagem-evesto', name: 'Evesto', origin: 'Melhor Personagem Jogavel', description: 'Vigário da Excelência', image: 'assets/images/nominees/melhor-personagem/evesto.jpg' },
+        { id: 'personagem-urrax', name: 'Urrax', origin: 'Melhor Personagem Jogavel', description: 'O Antrácito', image: 'assets/images/nominees/melhor-personagem/urrax.jpg' },
+        { id: 'personagem-amon', name: 'Amon', origin: 'Melhor Personagem Jogavel', description: 'O Dragão de Areia', image: 'assets/images/nominees/melhor-personagem/amon.jpg' },
+        { id: 'personagem-marvin', name: 'Marvin', origin: 'Melhor Personagem Jogavel', description: 'Canário de Mil Olhos', image: 'assets/images/nominees/melhor-personagem/marvin.jpg' }
     ],
     'melhor-vilao': [
-        { id: 'vilao-1', name: 'Vilão 1', origin: 'Campanha', description: 'Descrição do vilão...', image: '' },
-        { id: 'vilao-2', name: 'Vilão 2', origin: 'Campanha', description: 'Descrição do vilão...', image: '' },
-        { id: 'vilao-3', name: 'Vilão 3', origin: 'Campanha', description: 'Descrição do vilão...', image: '' },
-        { id: 'vilao-4', name: 'Vilão 4', origin: 'Campanha', description: 'Descrição do vilão...', image: '' },
-        { id: 'vilao-5', name: 'Vilão 5', origin: 'Campanha', description: 'Descrição do vilão...', image: '' }
+        { id: 'vilao-boris-tevinta', name: 'Boris Tevinta', origin: 'Melhor Vilao', description: 'O Lupino', image: 'assets/images/nominees/melhor-vilao/boris-tevinta.jpg' },
+        { id: 'vilao-lazmyr-draveth', name: 'Lazmyr Draveth', origin: 'Melhor Vilao', description: 'O Injustiçado', image: 'assets/images/nominees/melhor-vilao/lazmyr-draveth.jpg' },
+        { id: 'vilao-fenleriel', name: 'Fenleriel', origin: 'Melhor Vilao', description: 'O Arruinado', image: 'assets/images/nominees/melhor-vilao/fenleriel.jpg' },
+        { id: 'vilao-axiom', name: 'Axiom', origin: 'Melhor Vilao', description: 'Palavra Irredutível', image: 'assets/images/nominees/melhor-vilao/axiom.jpg' },
+        { id: 'vilao-irvidit', name: 'Irvidit', origin: 'Melhor Vilao', description: 'O Arauto do Amanhã', image: 'assets/images/nominees/melhor-vilao/irvidit.jpg' }
     ],
     'medalha-trump': [
-        { id: 'trump-1', name: 'Momento 1', origin: 'Sessão X', description: 'Descrição do momento...', image: '' },
-        { id: 'trump-2', name: 'Momento 2', origin: 'Sessão Y', description: 'Descrição do momento...', image: '' },
-        { id: 'trump-3', name: 'Momento 3', origin: 'Sessão Z', description: 'Descrição do momento...', image: '' },
-        { id: 'trump-4', name: 'Momento 4', origin: 'Sessão W', description: 'Descrição do momento...', image: '' },
-        { id: 'trump-5', name: 'Momento 5', origin: 'Sessão V', description: 'Descrição do momento...', image: '' }
-    ],
-    'centro-jena': [
-        { id: 'jena-1', name: 'Lição 1', origin: 'Sessão', description: 'Descrição da lição aprendida...', image: '' },
-        { id: 'jena-2', name: 'Lição 2', origin: 'Sessão', description: 'Descrição da lição aprendida...', image: '' },
-        { id: 'jena-3', name: 'Lição 3', origin: 'Sessão', description: 'Descrição da lição aprendida...', image: '' },
-        { id: 'jena-4', name: 'Lição 4', origin: 'Sessão', description: 'Descrição da lição aprendida...', image: '' },
-        { id: 'jena-5', name: 'Lição 5', origin: 'Sessão', description: 'Descrição da lição aprendida...', image: '' }
+        { id: 'trump-macaco-monster-hunter', name: 'Macaco Akuma', origin: 'Mao Peluda', description: 'Agora ele vai rolar iniciativa...', image: 'assets/images/nominees/medalha-trump/macaco-monster-hunter.jpg' },
+        { id: 'trump-plot-o-cavalo', name: 'Plot', origin: 'Mao Peluda', description: 'O Cavalo Quantico Não-Newtoniano', image: 'assets/images/nominees/medalha-trump/plot-o-cavalo.jpg' },
+        { id: 'trump-adaga-sniper', name: 'Adaga Sniper', origin: 'Mao Peluda', description: 'Perfeita para o Combate', image: 'assets/images/nominees/medalha-trump/adaga-sniper.jpg' },
+        { id: 'trump-drakx-jackie-chan', name: 'Montaria', origin: 'Mao Peluda', description: 'Sim ela corre, ataca e cura', image: 'assets/images/nominees/medalha-trump/drakx-jackie-chan.jpg' },
+        { id: 'trump-votacoes-do-grupo', name: 'Enquetes', origin: 'Mao Peluda', description: 'Todo voto é Nulo', image: 'assets/images/nominees/medalha-trump/votacoes-do-grupo.jpg' }
     ],
     'vamo-te-pegar': [
-        { id: 'curva-1', name: 'Plot Twist 1', origin: 'Arco', description: 'Descrição do plot twist...', image: '' },
-        { id: 'curva-2', name: 'Plot Twist 2', origin: 'Arco', description: 'Descrição do plot twist...', image: '' },
-        { id: 'curva-3', name: 'Plot Twist 3', origin: 'Arco', description: 'Descrição do plot twist...', image: '' },
-        { id: 'curva-4', name: 'Plot Twist 4', origin: 'Arco', description: 'Descrição do plot twist...', image: '' },
-        { id: 'curva-5', name: 'Plot Twist 5', origin: 'Arco', description: 'Descrição do plot twist...', image: '' }
+        { id: 'curva-ioanna-santorini', name: 'Ioanna Santorini', origin: 'Vamo Te Pegar na Curva', description: 'Pra variar é imortal', image: 'assets/images/nominees/vamo-te-pegar/ioanna-santorini.jpg' },
+        { id: 'curva-alustini', name: 'Alustini', origin: 'Vamo Te Pegar na Curva', description: 'Esse deu prazer', image: 'assets/images/nominees/vamo-te-pegar/alustini.jpg' },
+        { id: 'curva-matrona-dos-corvos', name: 'Matrona dos Corvos', origin: 'Vamo Te Pegar na Curva', description: 'Aqui é tropa do Emílio', image: 'assets/images/nominees/vamo-te-pegar/matrona-dos-corvos.jpg' },
+        { id: 'curva-oliver', name: 'Oliver', origin: 'Vamo Te Pegar na Curva', description: 'RIP Palitinho', image: 'assets/images/nominees/vamo-te-pegar/oliver.jpg' },
+        { id: 'curva-alanis-leophine', name: 'Alanis Leophine', origin: 'Vamo Te Pegar na Curva', description: 'Vai ter volta', image: 'assets/images/nominees/vamo-te-pegar/alanis-leophine.jpg' }
     ],
     'dark-fantasy': [
-        { id: 'dark-1', name: 'Momento 1', origin: 'Sessão', description: 'Descrição do momento dark...', image: '' },
-        { id: 'dark-2', name: 'Momento 2', origin: 'Sessão', description: 'Descrição do momento dark...', image: '' },
-        { id: 'dark-3', name: 'Momento 3', origin: 'Sessão', description: 'Descrição do momento dark...', image: '' },
-        { id: 'dark-4', name: 'Momento 4', origin: 'Sessão', description: 'Descrição do momento dark...', image: '' },
-        { id: 'dark-5', name: 'Momento 5', origin: 'Sessão', description: 'Descrição do momento dark...', image: '' }
+        { id: 'dark-lazmyr-draveth', name: 'Lazmyr Draveth', origin: 'Dark Fantasy', description: 'Pintou as unha já sabe', image: 'assets/images/nominees/dark-fantasy/lazmyr-draveth.jpg' },
+        { id: 'dark-deckard', name: 'Deckard', origin: 'Dark Fantasy', description: 'Eu sou só um cozinheiro...', image: 'assets/images/nominees/dark-fantasy/deckard.jpg' },
+        { id: 'dark-khaine', name: 'Khaine', origin: 'Dark Fantasy', description: 'Onde estão meus modos...', image: 'assets/images/nominees/dark-fantasy/khaine.jpg' },
+        { id: 'dark-geryon', name: 'Geryon', origin: 'Dark Fantasy', description: 'Você está errado', image: 'assets/images/nominees/dark-fantasy/geryon.jpg' },
+        { id: 'dark-irvidit', name: 'Irvidit', origin: 'Dark Fantasy', description: 'Card Game de defunto', image: 'assets/images/nominees/dark-fantasy/irvidit.jpg' }
     ],
     'premio-neils-bohr': [
-        { id: 'bohr-1', name: 'Detalhe 1', origin: 'Campanha', description: 'Descrição do detalhe...', image: '' },
-        { id: 'bohr-2', name: 'Detalhe 2', origin: 'Campanha', description: 'Descrição do detalhe...', image: '' },
-        { id: 'bohr-3', name: 'Detalhe 3', origin: 'Campanha', description: 'Descrição do detalhe...', image: '' },
-        { id: 'bohr-4', name: 'Detalhe 4', origin: 'Campanha', description: 'Descrição do detalhe...', image: '' },
-        { id: 'bohr-5', name: 'Detalhe 5', origin: 'Campanha', description: 'Descrição do detalhe...', image: '' }
+        { id: 'bohr-kali', name: 'Kali', origin: 'Minusculidade Quantica', description: 'Jena eu quero', image: 'assets/images/nominees/premio-neils-bohr/kali.jpg' },
+        { id: 'bohr-hukil', name: 'Hukil', origin: 'Minusculidade Quantica', description: 'Tenho até musica fih', image: 'assets/images/nominees/premio-neils-bohr/hukil.jpg' },
+        { id: 'bohr-hanatashi', name: 'Hanatashi', origin: 'Minusculidade Quantica', description: 'Calma, ainda tenho 2 ações.', image: 'assets/images/nominees/premio-neils-bohr/hanatashi.jpg' },
+        { id: 'bohr-evesto', name: 'Evesto', origin: 'Minusculidade Quantica', description: 'Criador do Combate Wi-Fi', image: 'assets/images/nominees/premio-neils-bohr/evesto.jpg' },
+        { id: 'bohr-groon', name: 'Groon', origin: 'Minusculidade Quantica', description: 'De onde vem sua força?', image: 'assets/images/nominees/premio-neils-bohr/groon.jpg' }
     ],
     'melhor-ship': [
-        { id: 'ship-1', name: 'Ship 1', origin: 'Campanha', description: 'Descrição do ship...', image: '' },
-        { id: 'ship-2', name: 'Ship 2', origin: 'Campanha', description: 'Descrição do ship...', image: '' },
-        { id: 'ship-3', name: 'Ship 3', origin: 'Campanha', description: 'Descrição do ship...', image: '' },
-        { id: 'ship-4', name: 'Ship 4', origin: 'Campanha', description: 'Descrição do ship...', image: '' },
-        { id: 'ship-5', name: 'Ship 5', origin: 'Campanha', description: 'Descrição do ship...', image: '' }
+        { id: 'ship-amon-deimos', name: 'Amon & Deimos', origin: 'Melhor Ship', description: 'Obrigado pelo... Cajadão.', image: 'assets/images/nominees/melhor-ship/amon-deimos.jpg' },
+        { id: 'ship-andrei-geryon', name: 'Andrei & Geryon', origin: 'Melhor Ship', description: 'Vai amassar quem com esse revolver?', image: 'assets/images/nominees/melhor-ship/andrei-geryon.jpg' },
+        { id: 'ship-fenleriel-academia', name: 'Fenleriel & Dono da Academia', origin: 'Melhor Ship', description: 'Me ajuda com esse supino...', image: 'assets/images/nominees/melhor-ship/fenleriel-dono-da-academia.jpg' },
+        { id: 'ship-bertrand-ludinus', name: 'Bertrand & Ludinus', origin: 'Melhor Ship', description: 'Ayaya... Meu rei.', image: 'assets/images/nominees/melhor-ship/bertrand-ludinus.jpg' },
+        { id: 'ship-khaine-evesto', name: 'Khaine & Evesto', origin: 'Melhor Ship', description: 'Ja te mostrei... O Anel?', image: 'assets/images/nominees/melhor-ship/khaine-evesto.jpg' }
     ],
     'morreu-feiao': [
-        { id: 'morte-1', name: 'Morte 1', origin: 'Sessão', description: 'Descrição da morte...', image: '' },
-        { id: 'morte-2', name: 'Morte 2', origin: 'Sessão', description: 'Descrição da morte...', image: '' },
-        { id: 'morte-3', name: 'Morte 3', origin: 'Sessão', description: 'Descrição da morte...', image: '' },
-        { id: 'morte-4', name: 'Morte 4', origin: 'Sessão', description: 'Descrição da morte...', image: '' },
-        { id: 'morte-5', name: 'Morte 5', origin: 'Sessão', description: 'Descrição da morte...', image: '' }
+        { id: 'morte-fanatico', name: 'Fanatico', origin: 'Morreu Feiao', description: 'Morri.', image: 'assets/images/nominees/morreu-feiao/fanatico.jpg' },
+        { id: 'morte-deimos', name: 'Deimos', origin: 'Morreu Feiao', description: 'Inacreditavel', image: 'assets/images/nominees/morreu-feiao/deimos.jpg' },
+        { id: 'morte-kethos', name: 'Kethos', origin: 'Morreu Feiao', description: 'Nem jogou', image: 'assets/images/nominees/morreu-feiao/kethos.jpg' },
+        { id: 'morte-alustini', name: 'Alustini', origin: 'Morreu Feiao', description: 'Mamou pra porta fechada', image: 'assets/images/nominees/morreu-feiao/alustini.jpg' },
+        { id: 'morte-eodwulf', name: 'Eodwulf', origin: 'Morreu Feiao', description: 'Amon saiu do grupo', image: 'assets/images/nominees/morreu-feiao/eodwulf.jpg' }
     ],
     'premio-titanic': [
-        { id: 'titanic-1', name: 'Plano 1', origin: 'Sessão', description: 'Descrição do plano...', image: '' },
-        { id: 'titanic-2', name: 'Plano 2', origin: 'Sessão', description: 'Descrição do plano...', image: '' },
-        { id: 'titanic-3', name: 'Plano 3', origin: 'Sessão', description: 'Descrição do plano...', image: '' },
-        { id: 'titanic-4', name: 'Plano 4', origin: 'Sessão', description: 'Descrição do plano...', image: '' },
-        { id: 'titanic-5', name: 'Plano 5', origin: 'Sessão', description: 'Descrição do plano...', image: '' }
+        { id: 'titanic-cemiterio-theladil', name: 'Cemiterio de Theladil', origin: 'Titanic', description: 'Maior clima de enterro', image: 'assets/images/nominees/premio-titanic/cemiterio-theladil.jpg' },
+        { id: 'titanic-twig-blights-farol', name: 'Twig Blights no Farol', origin: 'Titanic', description: 'Todo mundo pegou no meu pau', image: 'assets/images/nominees/premio-titanic/twig-blights-no-farol.jpg' },
+        { id: 'titanic-marvin-zadash', name: 'Marvin em Zadash', origin: 'Titanic', description: 'Toma aqui pra você lembrar de mim...', image: 'assets/images/nominees/premio-titanic/marvin-em-zadash.jpg' },
+        { id: 'titanic-buraco-do-fedor', name: 'Buraco do Fedor', origin: 'Titanic', description: 'Tem que ser homem.', image: 'assets/images/nominees/premio-titanic/buraco-do-fedor.jpg' },
+        { id: 'titanic-magni-anakin', name: 'Magni e o Anakin', origin: 'Titanic', description: 'Assim tipo o anakin sabe?.', image: 'assets/images/nominees/premio-titanic/magni-pedindo-o-anakin.jpg' }
     ],
     'medalha-naruto': [
-        { id: 'naruto-1', name: 'Momento 1', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'naruto-2', name: 'Momento 2', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'naruto-3', name: 'Momento 3', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'naruto-4', name: 'Momento 4', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'naruto-5', name: 'Momento 5', origin: 'Sessão', description: 'Descrição do momento...', image: '' }
+        { id: 'naruto-ludinus', name: 'Ludinus', origin: 'Naruto', description: 'Destruir a Lua pra não virar alcóolatra', image: 'assets/images/nominees/medalha-naruto/ludinus.jpg' },
+        { id: 'naruto-kali', name: 'Kali', origin: 'Naruto', description: 'Kaioken pra vencer purrinha', image: 'assets/images/nominees/medalha-naruto/kali.jpg' },
+        { id: 'naruto-groon', name: 'Groon', origin: 'Naruto', description: 'Cala a boca todo mundo', image: 'assets/images/nominees/medalha-naruto/groon.jpg' },
+        { id: 'naruto-axiom', name: 'Axiom', origin: 'Naruto', description: 'Quem é o mais forte?', image: 'assets/images/nominees/medalha-naruto/axiom.jpg' },
+        { id: 'naruto-', name: 'Hukil', origin: 'Naruto', description: 'OUÇAM-ME TODOS', image: 'assets/images/nominees/medalha-naruto/magni.jpg' }
     ],
     'npc-apepe': [
-        { id: 'apepe-1', name: 'NPC Fofo 1', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'apepe-2', name: 'NPC Fofo 2', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'apepe-3', name: 'NPC Fofo 3', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'apepe-4', name: 'NPC Fofo 4', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'apepe-5', name: 'NPC Fofo 5', origin: 'Campanha', description: 'Descrição do NPC...', image: '' }
+        { id: 'apepe-bicho-pau', name: 'Bicho-Pau', origin: 'NPC Apepe', description: 'CARALHOOOOOW.', image: 'assets/images/nominees/npc-apepe/bicho-pau.jpg' },
+        { id: 'apepe-carnica', name: 'Carnica', origin: 'NPC Apepe', description: 'Carroça de VIADOS', image: 'assets/images/nominees/npc-apepe/carnica.jpg' },
+        { id: 'apepe-mustafa', name: 'Mustafa', origin: 'NPC Apepe', description: 'Eu volto depois', image: 'assets/images/nominees/npc-apepe/mustafa.jpg' },
+        { id: 'apepe-coletor-impostos', name: 'Coletor de Impostos', origin: 'NPC Apepe', description: 'TEMKI PAGA OK', image: 'assets/images/nominees/npc-apepe/coletor-de-impostos.jpg' },
+        { id: 'apepe-andrei', name: 'Andrei', origin: 'NPC Apepe', description: 'Este sujeito da o cu com altissima proficiencia', image: 'assets/images/nominees/npc-apepe/andrei.jpg' }
     ],
     'npc-micao': [
-        { id: 'micao-1', name: 'NPC Gato 1', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'micao-2', name: 'NPC Gato 2', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'micao-3', name: 'NPC Gato 3', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'micao-4', name: 'NPC Gato 4', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'micao-5', name: 'NPC Gato 5', origin: 'Campanha', description: 'Descrição do NPC...', image: '' }
+        { id: 'micao-galsariad', name: 'Galsariad', origin: 'NPC Micao', description: 'FAZ ALGUMA COISA INUTIL', image: 'assets/images/nominees/npc-micao/galsariad.jpg' },
+        { id: 'micao-saleem', name: 'Saleem', origin: 'NPC Micao', description: 'Saleem Muleke', image: 'assets/images/nominees/npc-micao/saleem.jpg' },
+        { id: 'micao-sabugson', name: 'Sabugson', origin: 'NPC Micao', description: 'Pra abandonar filha eu sou bom', image: 'assets/images/nominees/npc-micao/sabugson.jpg' },
+        { id: 'micao-nanael', name: 'Nanael', origin: 'NPC Micao', description: '🥰🥰🥰🥰🥰', image: 'assets/images/nominees/npc-micao/nanael.jpg' },
+        { id: 'micao-fjord', name: 'Fjord', origin: 'NPC Micao', description: 'Cara... Eu sou muito foda.', image: 'assets/images/nominees/npc-micao/fjord.jpg' }
     ],
     'npc-estou-ajudando': [
-        { id: 'ajudando-1', name: 'NPC Ajuda 1', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'ajudando-2', name: 'NPC Ajuda 2', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'ajudando-3', name: 'NPC Ajuda 3', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'ajudando-4', name: 'NPC Ajuda 4', origin: 'Campanha', description: 'Descrição do NPC...', image: '' },
-        { id: 'ajudando-5', name: 'NPC Ajuda 5', origin: 'Campanha', description: 'Descrição do NPC...', image: '' }
+        { id: 'ajudando-galsariad', name: 'Galsariad', origin: 'NPC Estou Ajudando', description: 'Insira aqui comentário desnecessario', image: 'assets/images/nominees/npc-estou-ajudando/galsariad.jpg' },
+        { id: 'ajudando-kadan', name: 'Kadan', origin: 'NPC Estou Ajudando', description: 'Mas quem disse que eu quero ajudar?', image: 'assets/images/nominees/npc-estou-ajudando/kadan.jpg' },
+        { id: 'ajudando-andrei', name: 'Andrei', origin: 'NPC Estou Ajudando', description: 'Não tem jeito vamos ter que comer terra', image: 'assets/images/nominees/npc-estou-ajudando/andrei.jpg' },
+        { id: 'ajudando-fjord', name: 'Fjord', origin: 'NPC Estou Ajudando', description: 'Tipo... Realmente muito foda.', image: 'assets/images/nominees/npc-estou-ajudando/fjord.jpg' },
+        { id: 'ajudando-nanael', name: 'Nanael', origin: 'NPC Estou Ajudando', description: '🥰🥰🥰 Oiiiii 🥰🥰🥰', image: 'assets/images/nominees/npc-estou-ajudando/nanael.jpg' }
     ],
     'colirio-capricho': [
-        { id: 'colirio-1', name: 'Momento 1', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'colirio-2', name: 'Momento 2', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'colirio-3', name: 'Momento 3', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'colirio-4', name: 'Momento 4', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'colirio-5', name: 'Momento 5', origin: 'Sessão', description: 'Descrição do momento...', image: '' }
+        { id: 'colirio-lindao', name: 'Lindao', origin: 'Colirio Capricho', description: 'Diclupa', image: 'assets/images/nominees/colirio-capricho/lindao.jpg' },
+        { id: 'colirio-essek', name: 'Essek', origin: 'Colirio Capricho', description: 'Não é creme, é pouca exposição ao sol.', image: 'assets/images/nominees/colirio-capricho/essek.jpg' },
+        { id: 'colirio-cesar-thrune', name: 'Cesar Thrune', origin: 'Colirio Capricho', description: 'Um macho de verdade', image: 'assets/images/nominees/colirio-capricho/cesar-thrune.jpg' },
+        { id: 'colirio-ihmotep', name: 'Ihmotep', origin: 'Colirio Capricho', description: 'Meu estilista era um diabo', image: 'assets/images/nominees/colirio-capricho/ihmotep.jpg' },
+        { id: 'colirio-amon', name: 'Amon', origin: 'Colirio Capricho', description: 'Bem... meu estilista é um diabo.', image: 'assets/images/nominees/colirio-capricho/amon.jpg' }
     ],
     'melhor-tilt': [
-        { id: 'tilt-1', name: 'Tilt 1', origin: 'Sessão', description: 'Descrição do tilt...', image: '' },
-        { id: 'tilt-2', name: 'Tilt 2', origin: 'Sessão', description: 'Descrição do tilt...', image: '' },
-        { id: 'tilt-3', name: 'Tilt 3', origin: 'Sessão', description: 'Descrição do tilt...', image: '' },
-        { id: 'tilt-4', name: 'Tilt 4', origin: 'Sessão', description: 'Descrição do tilt...', image: '' },
-        { id: 'tilt-5', name: 'Tilt 5', origin: 'Sessão', description: 'Descrição do tilt...', image: '' }
+        { id: 'tilt-jena', name: 'Jena', origin: 'Estupefied 1', description: 'Stupefied 1', image: 'assets/images/nominees/melhor-tilt/jena.jpg' },
+        { id: 'tilt-ryuk', name: 'Ryuk', origin: 'Erros Punidos', description: 'Todo erro é punido', image: 'assets/images/nominees/melhor-tilt/ryuk.jpg' },
+        { id: 'tilt-midgard', name: 'Midgard', origin: 'Rubinho', description: 'Aventura que vem eu chego aí', image: 'assets/images/nominees/melhor-tilt/midgard.jpg' },
+        { id: 'tilt-shiki', name: 'Shiki', origin: 'Matador de Petista', description: 'RELA NA CARROÇA PETISTAS', image: 'assets/images/nominees/melhor-tilt/shiki.jpg' },
+        { id: 'tilt-drakx', name: 'Drakx', origin: 'Nao ta Medieval', description: 'Minha familia bebe chumbo', image: 'assets/images/nominees/melhor-tilt/drakx.jpg' }
     ],
     'pressao-baxo': [
-        { id: 'pressao-1', name: 'Cena 1', origin: 'Sessão', description: 'Descrição da cena...', image: '' },
-        { id: 'pressao-2', name: 'Cena 2', origin: 'Sessão', description: 'Descrição da cena...', image: '' },
-        { id: 'pressao-3', name: 'Cena 3', origin: 'Sessão', description: 'Descrição da cena...', image: '' },
-        { id: 'pressao-4', name: 'Cena 4', origin: 'Sessão', description: 'Descrição da cena...', image: '' },
-        { id: 'pressao-5', name: 'Cena 5', origin: 'Sessão', description: 'Descrição da cena...', image: '' }
-    ],
-    'profissao-cutscene': [
-        { id: 'cutscene-1', name: 'Cutscene 1', origin: 'Sessão', description: 'Descrição da cutscene...', image: '' },
-        { id: 'cutscene-2', name: 'Cutscene 2', origin: 'Sessão', description: 'Descrição da cutscene...', image: '' },
-        { id: 'cutscene-3', name: 'Cutscene 3', origin: 'Sessão', description: 'Descrição da cutscene...', image: '' },
-        { id: 'cutscene-4', name: 'Cutscene 4', origin: 'Sessão', description: 'Descrição da cutscene...', image: '' },
-        { id: 'cutscene-5', name: 'Cutscene 5', origin: 'Sessão', description: 'Descrição da cutscene...', image: '' }
+        { id: 'pressao-dragao-de-otari', name: 'Dragao de Otari', origin: 'Pressao Baxo', description: 'Achadores de Caminho', image: 'assets/images/nominees/pressao-baxo/dragao-de-otari.jpg' },
+        { id: 'pressao-cemiterio-theladil', name: 'Cemiterio de Shindu\'ryarin', origin: 'Pressao Baxo', description: 'Reflexo Arcano', image: 'assets/images/nominees/pressao-baxo/cemiterio-theladil.jpg' },
+        { id: 'pressao-dragao-mumia', name: 'O Dragao Mumia', origin: 'Pressao Baxo', description: 'Leagar', image: 'assets/images/nominees/pressao-baxo/dragao-mumia.jpg' },
+        { id: 'pressao-o-fanatico', name: 'O Fanatico', origin: 'Pressao Baxo', description: 'Maldição das Ilhas Swavain', image: 'assets/images/nominees/pressao-baxo/o-fanatico.jpg' },
+        { id: 'pressao-axiom-dragao', name: 'Axiom Dragao', origin: 'Pressao Baxo', description: 'Hic Irrumabus', image: 'assets/images/nominees/pressao-baxo/axiom-dragao.jpg' }
     ],
     'dento': [
-        { id: 'dento-1', name: 'Momento 1', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'dento-2', name: 'Momento 2', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'dento-3', name: 'Momento 3', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'dento-4', name: 'Momento 4', origin: 'Sessão', description: 'Descrição do momento...', image: '' },
-        { id: 'dento-5', name: 'Momento 5', origin: 'Sessão', description: 'Descrição do momento...', image: '' }
+        { id: 'dento-suria-dwendal', name: 'Suria Dwendal', origin: 'Dento', description: 'Não podem ver uma casada', image: 'assets/images/nominees/dento/suria-dwendal.jpg' },
+        { id: 'dento-lannathia', name: 'Lannathia', origin: 'Dento', description: 'Nem com guindaste pra me tirar de dentro', image: 'assets/images/nominees/dento/lannathia.jpg' },
+        { id: 'dento-vess', name: 'Vess', origin: 'Dento', description: 'Ganhar Iphone nunca foi tão facil', image: 'assets/images/nominees/dento/vess.jpg' },
+        { id: 'dento-rubi-marinho', name: 'Rubi Marinho', origin: 'Dento', description: 'Invadindo seu espaço pessoal', image: 'assets/images/nominees/dento/rubi-marinho.jpg' },
+        { id: 'dento-vayshlin', name: 'Vayshlin', origin: 'Dento', description: 'Mulher é muito foda', image: 'assets/images/nominees/dento/vayshlin.jpg' }
     ],
     'categoria-shiki': [
-        { id: 'shiki-1', name: 'Mistério 1', origin: '???', description: 'Apenas Shiki sabe...', image: '' },
-        { id: 'shiki-2', name: 'Mistério 2', origin: '???', description: 'Apenas Shiki sabe...', image: '' },
-        { id: 'shiki-3', name: 'Mistério 3', origin: '???', description: 'Apenas Shiki sabe...', image: '' },
-        { id: 'shiki-4', name: 'Mistério 4', origin: '???', description: 'Apenas Shiki sabe...', image: '' },
-        { id: 'shiki-5', name: 'Mistério 5', origin: '???', description: 'Apenas Shiki sabe...', image: '' }
+        { id: 'shiki-salvar-kasimir', name: 'Salvar o Kasimir', origin: 'Categoria Shiki', description: 'Contribuindo pra conversa', image: 'assets/images/nominees/categoria-shiki/salvar-o-kasimir.jpg' },
+        { id: 'shiki-buscar-quarto', name: 'Buscar um quarto', origin: 'Categoria Shiki', description: 'NAO SEI OQ FAZER, QUARTO.', image: 'assets/images/nominees/categoria-shiki/buscar-um-quarto.jpg' },
+        { id: 'shiki-jena-confuso', name: 'Exidrian Godlike', origin: 'Categoria Shiki', description: 'Porra ja nao falei isso pra vocês umas 3 vezes?', image: 'assets/images/nominees/categoria-shiki/jena-confuso.jpg' },
+        { id: 'shiki-e-o-colar', name: 'Ele estava de colar?', origin: 'Categoria Shiki', description: 'Bacana mas e o colar?', image: 'assets/images/nominees/categoria-shiki/e-o-colar.jpg' },
+        { id: 'shiki-olha-meu-pombo', name: 'Olha meu pombo', origin: 'Categoria Shiki', description: 'Meu pombo galera 😃', image: 'assets/images/nominees/categoria-shiki/olha-meu-pombo.jpg' }
     ]
 };
 
