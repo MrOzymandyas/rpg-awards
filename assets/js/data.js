@@ -172,7 +172,6 @@ const NOMINEES = {
     ],
     'melhor-aventura': [
         { id: 'aventura-a-corrente-a-ferida-de-burok', name: 'A Corrente', origin: 'A Ferida de Burok', description: '', image: 'assets/images/nominees/melhor-aventura/a-corrente-a-ferida-de-burok.jpg' },
-        { id: 'aventura-taldorei-a-coroa-de-cinzas', name: 'Tal\'Dorei', origin: 'A Coroa de Cinzas', description: '', image: 'assets/images/nominees/melhor-aventura/taldorei-a-coroa-de-cinzas.jpg' },
         { id: 'aventura-wildemount-hic-irrumabus', name: 'Wildemount', origin: 'Hic Irrumabus', description: '', image: 'assets/images/nominees/melhor-aventura/wildemount-hic-irrumabus.jpg' },
         { id: 'aventura-theladil-o-trono-vazio', name: 'Theladil', origin: 'O Trono Vazio', description: '', image: 'assets/images/nominees/melhor-aventura/theladil-o-trono-vazio.jpg' },
         { id: 'aventura-laegar-o-circulo-dourado', name: 'Laegar', origin: 'O Circulo Dourado', description: '', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' },
@@ -186,17 +185,17 @@ const NOMINEES = {
         { id: 'personagem-marvin', name: 'Marvin', origin: 'Canário de Mil Olhos', description: '', image: 'assets/images/nominees/melhor-personagem/marvin.jpg' }
     ],
     'melhor-vilao': [
-        { id: 'vilao-boris-tevinta', name: 'Boris Tevinta', origin: 'Melhor Vilao', description: 'O Lupino', image: 'assets/images/nominees/melhor-vilao/boris-tevinta.jpg' },
-        { id: 'vilao-lazmyr-draveth', name: 'Lazmyr Draveth', origin: 'Melhor Vilao', description: 'O Injustiçado', image: 'assets/images/nominees/melhor-vilao/lazmyr-draveth.jpg' },
-        { id: 'vilao-fenleriel', name: 'Fenleriel', origin: 'Melhor Vilao', description: 'O Arruinado', image: 'assets/images/nominees/melhor-vilao/fenleriel.jpg' },
-        { id: 'vilao-axiom', name: 'Axiom', origin: 'Melhor Vilao', description: 'Palavra Irredutível', image: 'assets/images/nominees/melhor-vilao/axiom.jpg' },
-        { id: 'vilao-irvidit', name: 'Irvidit', origin: 'Melhor Vilao', description: 'O Arauto do Amanhã', image: 'assets/images/nominees/melhor-vilao/irvidit.jpg' }
+        { id: 'vilao-boris-tevinta', name: 'Boris Tevinta', origin: 'O Lupino', description: '', image: 'assets/images/nominees/melhor-vilao/boris-tevinta.jpg' },
+        { id: 'vilao-lazmyr-draveth', name: 'Lazmyr Draveth', origin: 'O Injustiçado', description: '', image: 'assets/images/nominees/melhor-vilao/lazmyr-draveth.jpg' },
+        { id: 'vilao-fenleriel', name: 'Fenleriel', origin: 'O Arruinado', description: '', image: 'assets/images/nominees/melhor-vilao/fenleriel.jpg' },
+        { id: 'vilao-axiom', name: 'Axiom', origin: 'Palavra Irredutível', description: '', image: 'assets/images/nominees/melhor-vilao/axiom.jpg' },
+        { id: 'vilao-irvidit', name: 'Irvidit', origin: 'O Arauto do Amanhã', description: '', image: 'assets/images/nominees/melhor-vilao/irvidit.jpg' }
     ],
     'medalha-trump': [
-        { id: 'trump-macaco-monster-hunter', name: 'Macaco Akuma', origin: 'Mao Peluda', description: 'Agora ele vai rolar iniciativa...', image: 'assets/images/nominees/medalha-trump/macaco-monster-hunter.jpg' },
-        { id: 'trump-plot-o-cavalo', name: 'Plot', origin: 'Mao Peluda', description: 'O Cavalo Quantico Não-Newtoniano', image: 'assets/images/nominees/medalha-trump/plot-o-cavalo.jpg' },
-        { id: 'trump-adaga-sniper', name: 'Adaga Sniper', origin: 'Mao Peluda', description: 'Perfeita para o Combate', image: 'assets/images/nominees/medalha-trump/adaga-sniper.jpg' },
-        { id: 'trump-drakx-jackie-chan', name: 'Montaria', origin: 'Mao Peluda', description: 'Sim ela corre, ataca e cura', image: 'assets/images/nominees/medalha-trump/drakx-jackie-chan.jpg' },
+        { id: 'trump-macaco-monster-hunter', name: 'Macaco Akuma', origin: 'Agora ele vai rolar iniciativa...', description: '', image: 'assets/images/nominees/medalha-trump/macaco-monster-hunter.jpg' },
+        { id: 'trump-plot-o-cavalo', name: 'Plot', origin: 'O Cavalo Quantico Não-Newtoniano', description: '', image: 'assets/images/nominees/medalha-trump/plot-o-cavalo.jpg' },
+        { id: 'trump-adaga-sniper', name: 'Adaga Sniper', origin: 'Perfeita para o Combate', description: '', image: 'assets/images/nominees/medalha-trump/adaga-sniper.jpg' },
+        { id: 'trump-drakx-jackie-chan', name: 'Montaria do Drakx', origin: 'Sim ela corre, ataca e cura', description: '', image: 'assets/images/nominees/medalha-trump/drakx-jackie-chan.jpg' },
         { id: 'trump-votacoes-do-grupo', name: 'Enquetes', origin: 'Mao Peluda', description: 'Todo voto é Nulo', image: 'assets/images/nominees/medalha-trump/votacoes-do-grupo.jpg' }
     ],
     'vamo-te-pegar': [
