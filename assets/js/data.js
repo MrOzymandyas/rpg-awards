@@ -164,18 +164,19 @@ const CATEGORIES = [
 // Indicados/Nomeados por categoria (estrutura para 20 categorias)
 const NOMINEES = {
     'melhor-npc': [
-        { id: 'npc-essek', name: 'Essek', origin: 'Melhor NPC', description: 'O Mão Negra', image: 'assets/images/nominees/melhor-npc/essek.webp' },
-        { id: 'npc-mako', name: 'Mako', origin: 'Melhor NPC', description: 'O Rei Eterno', image: 'assets/images/nominees/melhor-npc/mako.png' },
-        { id: 'npc-fuligem', name: 'Fuligem', origin: 'Melhor NPC', description: 'Capitão do Sussuro', image: 'assets/images/nominees/melhor-npc/fuligem.png' },
-        { id: 'npc-kadan', name: 'Kadan', origin: 'Melhor NPC', description: 'O Terror Noturno', image: 'assets/images/nominees/melhor-npc/kadan.png' },
-        { id: 'npc-cesar', name: 'Cesar', origin: 'Melhor NPC', description: 'Irmão do Irmão do César', image: 'assets/images/nominees/melhor-npc/cesar.png' }
+        { id: 'npc-essek', name: 'Essek', origin: 'O Mão Negra', description: 'Exandria', image: 'assets/images/nominees/melhor-npc/essek.webp' },
+        { id: 'npc-mako', name: 'Mako', origin: 'O Rei Eterno', description: 'Maldição das Ilhas Swavain', image: 'assets/images/nominees/melhor-npc/mako.png' },
+        { id: 'npc-fuligem', name: 'Fuligem', origin: 'Capitão do Sussuro', description: 'Maldição das Ilhas Swavain', image: 'assets/images/nominees/melhor-npc/fuligem.png' },
+        { id: 'npc-kadan', name: 'Kadan', origin: 'O Terror Noturno', description: 'Exandria', image: 'assets/images/nominees/melhor-npc/kadan.png' },
+        { id: 'npc-cesar', name: 'Cesar', origin: 'Guardião do Ouro Real', description: 'O Trono Vazio', image: 'assets/images/nominees/melhor-npc/cesar.png' }
     ],
     'melhor-aventura': [
-        { id: 'aventura-a-corrente-a-ferida-de-burok', name: 'A Corrente', origin: 'Melhor Aventura', description: 'A Ferida de Burok', image: 'assets/images/nominees/melhor-aventura/a-corrente-a-ferida-de-burok.jpg' },
-        { id: 'aventura-taldorei-a-coroa-de-cinzas', name: 'Tal\'Dorei', origin: 'Melhor Aventura', description: 'A Coroa de Cinzas', image: 'assets/images/nominees/melhor-aventura/taldorei-a-coroa-de-cinzas.jpg' },
-        { id: 'aventura-wildemount-hic-irrumabus', name: 'Wildemount', origin: 'Melhor Aventura', description: 'Hic Irrumabus', image: 'assets/images/nominees/melhor-aventura/wildemount-hic-irrumabus.jpg' },
-        { id: 'aventura-theladil-o-trono-vazio', name: 'Theladil', origin: 'Melhor Aventura', description: 'O Trono Vazio', image: 'assets/images/nominees/melhor-aventura/theladil-o-trono-vazio.jpg' },
-        { id: 'aventura-laegar-o-circulo-dourado', name: 'Laegar', origin: 'Melhor Aventura', description: 'O Circulo Dourado', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' }
+        { id: 'aventura-a-corrente-a-ferida-de-burok', name: 'A Corrente', origin: 'A Ferida de Burok', description: '', image: 'assets/images/nominees/melhor-aventura/a-corrente-a-ferida-de-burok.jpg' },
+        { id: 'aventura-taldorei-a-coroa-de-cinzas', name: 'Tal\'Dorei', origin: 'A Coroa de Cinzas', description: '', image: 'assets/images/nominees/melhor-aventura/taldorei-a-coroa-de-cinzas.jpg' },
+        { id: 'aventura-wildemount-hic-irrumabus', name: 'Wildemount', origin: 'Hic Irrumabus', description: '', image: 'assets/images/nominees/melhor-aventura/wildemount-hic-irrumabus.jpg' },
+        { id: 'aventura-theladil-o-trono-vazio', name: 'Theladil', origin: 'O Trono Vazio', description: '', image: 'assets/images/nominees/melhor-aventura/theladil-o-trono-vazio.jpg' },
+        { id: 'aventura-laegar-o-circulo-dourado', name: 'Laegar', origin: 'O Circulo Dourado', description: '', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' },
+        { id: 'aventura-a-corrente-maldicao-das-ilhas-swavain', name: 'A Corrente', origin: 'Maldição das Ilhas Swavain', description: '', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' }
     ],
     'melhor-personagem': [
         { id: 'personagem-hukil', name: 'Hukil', origin: 'Melhor Personagem Jogavel', description: 'Olho de Sangue', image: 'assets/images/nominees/melhor-personagem/hukil.jpg' },

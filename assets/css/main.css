@@ -1167,7 +1167,14 @@ body {
 }
 
 .nominee-description {
-    display: none;
+    margin-top: 0.3rem;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Selection Glow Effect */

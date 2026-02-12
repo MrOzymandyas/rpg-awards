@@ -106,6 +106,7 @@ const UI = (function() {
     function showLogin() {
         hideAllScreens();
         if (elements.loginScreen) {
+            elements.loginScreen.style.display = 'flex';
             elements.loginScreen.classList.add('active');
         }
     }
@@ -152,6 +153,7 @@ const UI = (function() {
         // Login
         if (elements.loginScreen) {
             elements.loginScreen.classList.remove('active');
+            elements.loginScreen.style.display = 'none';
         }
         
         // Dashboard
@@ -484,6 +486,7 @@ const UI = (function() {
                         <div class="nominee-info">
                             <h4 class="nominee-name">${nominee.name}</h4>
                             <p class="nominee-origin">${nominee.origin}</p>
+                            ${nominee.description ? `<p class="nominee-description">${nominee.description}</p>` : ''}
                         </div>
                     </div>
                 </div>
