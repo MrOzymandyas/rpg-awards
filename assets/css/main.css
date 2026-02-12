@@ -1118,10 +1118,7 @@ body {
 }
 
 .nominee-image::before {
-    content: '✦';
-    font-size: 3rem;
-    color: rgba(212, 175, 55, 0.15);
-    position: absolute;
+    content: none;
 }
 
 .nominee-image img {

@@ -176,14 +176,14 @@ const NOMINEES = {
         { id: 'aventura-wildemount-hic-irrumabus', name: 'Wildemount', origin: 'Hic Irrumabus', description: '', image: 'assets/images/nominees/melhor-aventura/wildemount-hic-irrumabus.jpg' },
         { id: 'aventura-theladil-o-trono-vazio', name: 'Theladil', origin: 'O Trono Vazio', description: '', image: 'assets/images/nominees/melhor-aventura/theladil-o-trono-vazio.jpg' },
         { id: 'aventura-laegar-o-circulo-dourado', name: 'Laegar', origin: 'O Circulo Dourado', description: '', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' },
-        { id: 'aventura-a-corrente-maldicao-das-ilhas-swavain', name: 'A Corrente', origin: 'Maldição das Ilhas Swavain', description: '', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' }
+        { id: 'aventura-a-corrente-maldicao-das-ilhas-swavain', name: 'A Corrente', origin: 'Maldição das Ilhas Swavain', description: '', image: 'assets/images/nominees/melhor-aventura/maldicao-das-ilhas-swavain.jpg' }
     ],
     'melhor-personagem': [
-        { id: 'personagem-hukil', name: 'Hukil', origin: 'Melhor Personagem Jogavel', description: 'Olho de Sangue', image: 'assets/images/nominees/melhor-personagem/hukil.jpg' },
-        { id: 'personagem-evesto', name: 'Evesto', origin: 'Melhor Personagem Jogavel', description: 'Vigário da Excelência', image: 'assets/images/nominees/melhor-personagem/evesto.jpg' },
-        { id: 'personagem-urrax', name: 'Urrax', origin: 'Melhor Personagem Jogavel', description: 'O Antrácito', image: 'assets/images/nominees/melhor-personagem/urrax.jpg' },
-        { id: 'personagem-amon', name: 'Amon', origin: 'Melhor Personagem Jogavel', description: 'O Dragão de Areia', image: 'assets/images/nominees/melhor-personagem/amon.jpg' },
-        { id: 'personagem-marvin', name: 'Marvin', origin: 'Melhor Personagem Jogavel', description: 'Canário de Mil Olhos', image: 'assets/images/nominees/melhor-personagem/marvin.jpg' }
+        { id: 'personagem-hukil', name: 'Hukil', origin: 'Olho de Sangue', description: '', image: 'assets/images/nominees/melhor-personagem/hukil.jpg' },
+        { id: 'personagem-evesto', name: 'Evesto', origin: 'Vigário da Excelência', description: '', image: 'assets/images/nominees/melhor-personagem/evesto.jpg' },
+        { id: 'personagem-urrax', name: 'Urrax', origin: 'O Antrácito', description: '', image: 'assets/images/nominees/melhor-personagem/urrax.jpg' },
+        { id: 'personagem-amon', name: 'Amon', origin: 'O Dragão de Areia', description: '', image: 'assets/images/nominees/melhor-personagem/amon.jpg' },
+        { id: 'personagem-marvin', name: 'Marvin', origin: 'Canário de Mil Olhos', description: '', image: 'assets/images/nominees/melhor-personagem/marvin.jpg' }
     ],
     'melhor-vilao': [
         { id: 'vilao-boris-tevinta', name: 'Boris Tevinta', origin: 'Melhor Vilao', description: 'O Lupino', image: 'assets/images/nominees/melhor-vilao/boris-tevinta.jpg' },
