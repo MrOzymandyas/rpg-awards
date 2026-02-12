@@ -164,17 +164,17 @@ const CATEGORIES = [
 // Indicados/Nomeados por categoria (estrutura para 20 categorias)
 const NOMINEES = {
     'melhor-npc': [
-        { id: 'npc-essek', name: 'Essek', origin: 'O Mão Negra', description: 'Exandria', image: 'assets/images/nominees/melhor-npc/essek.webp' },
-        { id: 'npc-mako', name: 'Mako', origin: 'O Rei Eterno', description: 'Maldição das Ilhas Swavain', image: 'assets/images/nominees/melhor-npc/mako.png' },
-        { id: 'npc-fuligem', name: 'Fuligem', origin: 'Capitão do Sussuro', description: 'Maldição das Ilhas Swavain', image: 'assets/images/nominees/melhor-npc/fuligem.png' },
-        { id: 'npc-kadan', name: 'Kadan', origin: 'O Terror Noturno', description: 'Exandria', image: 'assets/images/nominees/melhor-npc/kadan.png' },
-        { id: 'npc-cesar', name: 'Cesar', origin: 'Guardião do Ouro Real', description: 'O Trono Vazio', image: 'assets/images/nominees/melhor-npc/cesar.png' }
+        { id: 'npc-essek', name: 'Essek', origin: 'O Mão Negra', description: '', image: 'assets/images/nominees/melhor-npc/essek.webp' },
+        { id: 'npc-mako', name: 'Mako', origin: 'O Rei Eterno', description: '', image: 'assets/images/nominees/melhor-npc/mako.png' },
+        { id: 'npc-fuligem', name: 'Fuligem', origin: 'Capitão do Sussuro', description: '', image: 'assets/images/nominees/melhor-npc/fuligem.png' },
+        { id: 'npc-kadan', name: 'Kadan', origin: 'O Terror Noturno', description: '', image: 'assets/images/nominees/melhor-npc/kadan.png' },
+        { id: 'npc-cesar', name: 'Cesar', origin: 'Guardião do Ouro Real', description: '', image: 'assets/images/nominees/melhor-npc/cesar.png' }
     ],
     'melhor-aventura': [
         { id: 'aventura-a-corrente-a-ferida-de-burok', name: 'A Corrente', origin: 'A Ferida de Burok', description: '', image: 'assets/images/nominees/melhor-aventura/a-corrente-a-ferida-de-burok.jpg' },
         { id: 'aventura-wildemount-hic-irrumabus', name: 'Wildemount', origin: 'Hic Irrumabus', description: '', image: 'assets/images/nominees/melhor-aventura/wildemount-hic-irrumabus.jpg' },
-        { id: 'aventura-theladil-o-trono-vazio', name: 'Theladil', origin: 'O Trono Vazio', description: '', image: 'assets/images/nominees/melhor-aventura/theladil-o-trono-vazio.jpg' },
-        { id: 'aventura-laegar-o-circulo-dourado', name: 'Laegar', origin: 'O Circulo Dourado', description: '', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' },
+        { id: 'aventura-theladil-o-trono-vazio', name: 'Thelladil', origin: 'O Trono Vazio', description: '', image: 'assets/images/nominees/melhor-aventura/theladil-o-trono-vazio.jpg' },
+        { id: 'aventura-laegar-o-circulo-dourado', name: 'Leagar', origin: 'O Circulo Dourado', description: '', image: 'assets/images/nominees/melhor-aventura/laegar-o-circulo-dourado.jpg' },
         { id: 'aventura-a-corrente-maldicao-das-ilhas-swavain', name: 'A Corrente', origin: 'Maldição das Ilhas Swavain', description: '', image: 'assets/images/nominees/melhor-aventura/maldicao-das-ilhas-swavain.jpg' }
     ],
     'melhor-personagem': [
@@ -196,112 +196,112 @@ const NOMINEES = {
         { id: 'trump-plot-o-cavalo', name: 'Plot', origin: 'O Cavalo Quantico Não-Newtoniano', description: '', image: 'assets/images/nominees/medalha-trump/plot-o-cavalo.jpg' },
         { id: 'trump-adaga-sniper', name: 'Adaga Sniper', origin: 'Perfeita para o Combate', description: '', image: 'assets/images/nominees/medalha-trump/adaga-sniper.jpg' },
         { id: 'trump-drakx-jackie-chan', name: 'Montaria do Drakx', origin: 'Sim ela corre, ataca e cura', description: '', image: 'assets/images/nominees/medalha-trump/drakx-jackie-chan.jpg' },
-        { id: 'trump-votacoes-do-grupo', name: 'Enquetes', origin: 'Mao Peluda', description: 'Todo voto é Nulo', image: 'assets/images/nominees/medalha-trump/votacoes-do-grupo.jpg' }
+        { id: 'trump-votacoes-do-grupo', name: 'Enquetes', origin: 'Todo voto é Nulo', description: '', image: 'assets/images/nominees/medalha-trump/votacoes-do-grupo.jpg' }
     ],
     'vamo-te-pegar': [
-        { id: 'curva-ioanna-santorini', name: 'Ioanna Santorini', origin: 'Vamo Te Pegar na Curva', description: 'Pra variar é imortal', image: 'assets/images/nominees/vamo-te-pegar/ioanna-santorini.jpg' },
-        { id: 'curva-alustini', name: 'Alustini', origin: 'Vamo Te Pegar na Curva', description: 'Esse deu prazer', image: 'assets/images/nominees/vamo-te-pegar/alustini.jpg' },
-        { id: 'curva-matrona-dos-corvos', name: 'Matrona dos Corvos', origin: 'Vamo Te Pegar na Curva', description: 'Aqui é tropa do Emílio', image: 'assets/images/nominees/vamo-te-pegar/matrona-dos-corvos.jpg' },
-        { id: 'curva-oliver', name: 'Oliver', origin: 'Vamo Te Pegar na Curva', description: 'RIP Palitinho', image: 'assets/images/nominees/vamo-te-pegar/oliver.jpg' },
-        { id: 'curva-alanis-leophine', name: 'Alanis Leophine', origin: 'Vamo Te Pegar na Curva', description: 'Vai ter volta', image: 'assets/images/nominees/vamo-te-pegar/alanis-leophine.jpg' }
+        { id: 'curva-ioanna-santorini', name: 'Ioanna Santorini', origin: 'Pra variar é imortal', description: '', image: 'assets/images/nominees/vamo-te-pegar/ioanna-santorini.jpg' },
+        { id: 'curva-alustini', name: 'Alustini', origin: 'Esse deu prazer', description: '', image: 'assets/images/nominees/vamo-te-pegar/alustini.jpg' },
+        { id: 'curva-matrona-dos-corvos', name: 'Matrona dos Corvos', origin: 'Aqui é tropa do Emílio', description: '', image: 'assets/images/nominees/vamo-te-pegar/matrona-dos-corvos.jpg' },
+        { id: 'curva-oliver', name: 'Oliver', origin: 'RIP Palitinho', description: '', image: 'assets/images/nominees/vamo-te-pegar/oliver.jpg' },
+        { id: 'curva-alanis-leophine', name: 'Alanis Leophine', origin: 'Vai ter volta', description: '', image: 'assets/images/nominees/vamo-te-pegar/alanis-leophine.jpg' }
     ],
     'dark-fantasy': [
-        { id: 'dark-lazmyr-draveth', name: 'Lazmyr Draveth', origin: 'Dark Fantasy', description: 'Pintou as unha já sabe', image: 'assets/images/nominees/dark-fantasy/lazmyr-draveth.jpg' },
-        { id: 'dark-deckard', name: 'Deckard', origin: 'Dark Fantasy', description: 'Eu sou só um cozinheiro...', image: 'assets/images/nominees/dark-fantasy/deckard.jpg' },
-        { id: 'dark-khaine', name: 'Khaine', origin: 'Dark Fantasy', description: 'Onde estão meus modos...', image: 'assets/images/nominees/dark-fantasy/khaine.jpg' },
-        { id: 'dark-geryon', name: 'Geryon', origin: 'Dark Fantasy', description: 'Você está errado', image: 'assets/images/nominees/dark-fantasy/geryon.jpg' },
-        { id: 'dark-irvidit', name: 'Irvidit', origin: 'Dark Fantasy', description: 'Card Game de defunto', image: 'assets/images/nominees/dark-fantasy/irvidit.jpg' }
+        { id: 'dark-lazmyr-draveth', name: 'Lazmyr Draveth', origin: 'Pintou as unha já sabe', description: '', image: 'assets/images/nominees/dark-fantasy/lazmyr-draveth.jpg' },
+        { id: 'dark-deckard', name: 'Deckard', origin: 'Eu sou só um cozinheiro...', description: '', image: 'assets/images/nominees/dark-fantasy/deckard.jpg' },
+        { id: 'dark-khaine', name: 'Khaine', origin: 'Onde estão meus modos...', description: '', image: 'assets/images/nominees/dark-fantasy/khaine.jpg' },
+        { id: 'dark-geryon', name: 'Geryon', origin: 'Você está errado', description: '', image: 'assets/images/nominees/dark-fantasy/geryon.jpg' },
+        { id: 'dark-irvidit', name: 'Irvidit', origin: 'Card Game de defunto', description: '', image: 'assets/images/nominees/dark-fantasy/irvidit.jpg' }
     ],
     'premio-neils-bohr': [
-        { id: 'bohr-kali', name: 'Kali', origin: 'Minusculidade Quantica', description: 'Jena eu quero', image: 'assets/images/nominees/premio-neils-bohr/kali.jpg' },
-        { id: 'bohr-hukil', name: 'Hukil', origin: 'Minusculidade Quantica', description: 'Tenho até musica fih', image: 'assets/images/nominees/premio-neils-bohr/hukil.jpg' },
-        { id: 'bohr-hanatashi', name: 'Hanatashi', origin: 'Minusculidade Quantica', description: 'Calma, ainda tenho 2 ações.', image: 'assets/images/nominees/premio-neils-bohr/hanatashi.jpg' },
-        { id: 'bohr-evesto', name: 'Evesto', origin: 'Minusculidade Quantica', description: 'Criador do Combate Wi-Fi', image: 'assets/images/nominees/premio-neils-bohr/evesto.jpg' },
-        { id: 'bohr-groon', name: 'Groon', origin: 'Minusculidade Quantica', description: 'De onde vem sua força?', image: 'assets/images/nominees/premio-neils-bohr/groon.jpg' }
+        { id: 'bohr-kali', name: 'Kali', origin: 'Jena eu quero', description: '', image: 'assets/images/nominees/premio-neils-bohr/kali.jpg' },
+        { id: 'bohr-hukil', name: 'Hukil', origin: 'Tenho até musica fih', description: '', image: 'assets/images/nominees/premio-neils-bohr/hukil.jpg' },
+        { id: 'bohr-hanatashi', name: 'Hanatashi', origin: 'Calma, ainda tenho 2 ações.', description: '', image: 'assets/images/nominees/premio-neils-bohr/hanatashi.jpg' },
+        { id: 'bohr-evesto', name: 'Evesto', origin: 'Criador do Combate Wi-Fi', description: '', image: 'assets/images/nominees/premio-neils-bohr/evesto.jpg' },
+        { id: 'bohr-groon', name: 'Groon', origin: 'De onde vem sua força?', description: '', image: 'assets/images/nominees/premio-neils-bohr/groon.jpg' }
     ],
     'melhor-ship': [
-        { id: 'ship-amon-deimos', name: 'Amon & Deimos', origin: 'Melhor Ship', description: 'Obrigado pelo... Cajadão.', image: 'assets/images/nominees/melhor-ship/amon-deimos.jpg' },
-        { id: 'ship-andrei-geryon', name: 'Andrei & Geryon', origin: 'Melhor Ship', description: 'Vai amassar quem com esse revolver?', image: 'assets/images/nominees/melhor-ship/andrei-geryon.jpg' },
-        { id: 'ship-fenleriel-academia', name: 'Fenleriel & Dono da Academia', origin: 'Melhor Ship', description: 'Me ajuda com esse supino...', image: 'assets/images/nominees/melhor-ship/fenleriel-dono-da-academia.jpg' },
-        { id: 'ship-bertrand-ludinus', name: 'Bertrand & Ludinus', origin: 'Melhor Ship', description: 'Ayaya... Meu rei.', image: 'assets/images/nominees/melhor-ship/bertrand-ludinus.jpg' },
-        { id: 'ship-khaine-evesto', name: 'Khaine & Evesto', origin: 'Melhor Ship', description: 'Ja te mostrei... O Anel?', image: 'assets/images/nominees/melhor-ship/khaine-evesto.jpg' }
+        { id: 'ship-amon-deimos', name: 'Amon & Deimos', origin: 'Obrigado pelo... Cajadão.', description: '', image: 'assets/images/nominees/melhor-ship/amon-deimos.jpg' },
+        { id: 'ship-andrei-geryon', name: 'Andrei & Geryon', origin: 'Vai amassar quem com esse revolver?', description: '', image: 'assets/images/nominees/melhor-ship/andrei-geryon.jpg' },
+        { id: 'ship-fenleriel-academia', name: 'Fenleriel & Dono da Academia', origin: 'Me ajuda com esse supino...', description: '', image: 'assets/images/nominees/melhor-ship/fenleriel-dono-da-academia.jpg' },
+        { id: 'ship-bertrand-ludinus', name: 'Bertrand & Ludinus', origin: 'Ayaya... Meu rei.', description: '', image: 'assets/images/nominees/melhor-ship/bertrand-ludinus.jpg' },
+        { id: 'ship-khaine-evesto', name: 'Khaine & Evesto', origin: 'Ja te mostrei... O Anel?', description: '', image: 'assets/images/nominees/melhor-ship/khaine-evesto.jpg' }
     ],
     'morreu-feiao': [
-        { id: 'morte-fanatico', name: 'Fanatico', origin: 'Morreu Feiao', description: 'Morri.', image: 'assets/images/nominees/morreu-feiao/fanatico.jpg' },
-        { id: 'morte-deimos', name: 'Deimos', origin: 'Morreu Feiao', description: 'Inacreditavel', image: 'assets/images/nominees/morreu-feiao/deimos.jpg' },
-        { id: 'morte-kethos', name: 'Kethos', origin: 'Morreu Feiao', description: 'Nem jogou', image: 'assets/images/nominees/morreu-feiao/kethos.jpg' },
-        { id: 'morte-alustini', name: 'Alustini', origin: 'Morreu Feiao', description: 'Mamou pra porta fechada', image: 'assets/images/nominees/morreu-feiao/alustini.jpg' },
-        { id: 'morte-eodwulf', name: 'Eodwulf', origin: 'Morreu Feiao', description: 'Amon saiu do grupo', image: 'assets/images/nominees/morreu-feiao/eodwulf.jpg' }
+        { id: 'morte-fanatico', name: 'Fanatico', origin: 'Morri.', description: '', image: 'assets/images/nominees/morreu-feiao/fanatico.jpg' },
+        { id: 'morte-deimos', name: 'Deimos', origin: 'Inacreditavel', description: '', image: 'assets/images/nominees/morreu-feiao/deimos.jpg' },
+        { id: 'morte-kethos', name: 'Kethos', origin: 'Nem jogou', description: '', image: 'assets/images/nominees/morreu-feiao/kethos.jpg' },
+        { id: 'morte-alustini', name: 'Alustini', origin: 'Mamou pra porta fechada', description: '', image: 'assets/images/nominees/morreu-feiao/alustini.jpg' },
+        { id: 'morte-eodwulf', name: 'Eodwulf', origin: 'Amon saiu do grupo', description: '', image: 'assets/images/nominees/morreu-feiao/eodwulf.jpg' }
     ],
     'premio-titanic': [
-        { id: 'titanic-cemiterio-theladil', name: 'Cemiterio de Theladil', origin: 'Titanic', description: 'Maior clima de enterro', image: 'assets/images/nominees/premio-titanic/cemiterio-theladil.jpg' },
-        { id: 'titanic-twig-blights-farol', name: 'Twig Blights no Farol', origin: 'Titanic', description: 'Todo mundo pegou no meu pau', image: 'assets/images/nominees/premio-titanic/twig-blights-no-farol.jpg' },
-        { id: 'titanic-marvin-zadash', name: 'Marvin em Zadash', origin: 'Titanic', description: 'Toma aqui pra você lembrar de mim...', image: 'assets/images/nominees/premio-titanic/marvin-em-zadash.jpg' },
-        { id: 'titanic-buraco-do-fedor', name: 'Buraco do Fedor', origin: 'Titanic', description: 'Tem que ser homem.', image: 'assets/images/nominees/premio-titanic/buraco-do-fedor.jpg' },
-        { id: 'titanic-magni-anakin', name: 'Magni e o Anakin', origin: 'Titanic', description: 'Assim tipo o anakin sabe?.', image: 'assets/images/nominees/premio-titanic/magni-pedindo-o-anakin.jpg' }
+        { id: 'titanic-cemiterio-theladil', name: 'Cemiterio de Theladil', origin: 'Maior clima de enterro', description: '', image: 'assets/images/nominees/premio-titanic/cemiterio-theladil.jpg' },
+        { id: 'titanic-twig-blights-farol', name: 'Twig Blights no Farol', origin: 'Todo mundo pegou no meu pau', description: '', image: 'assets/images/nominees/premio-titanic/twig-blights-no-farol.jpg' },
+        { id: 'titanic-marvin-zadash', name: 'Marvin em Zadash', origin: 'Toma aqui pra você lembrar de mim...', description: '', image: 'assets/images/nominees/premio-titanic/marvin-em-zadash.jpg' },
+        { id: 'titanic-buraco-do-fedor', name: 'Buraco do Fedor', origin: 'Tem que ser homem.', description: '', image: 'assets/images/nominees/premio-titanic/buraco-do-fedor.jpg' },
+        { id: 'titanic-magni-anakin', name: 'Magni e o Anakin', origin: 'Assim tipo o anakin sabe?.', description: '', image: 'assets/images/nominees/premio-titanic/magni-pedindo-o-anakin.jpg' }
     ],
     'medalha-naruto': [
-        { id: 'naruto-ludinus', name: 'Ludinus', origin: 'Naruto', description: 'Destruir a Lua pra não virar alcóolatra', image: 'assets/images/nominees/medalha-naruto/ludinus.jpg' },
-        { id: 'naruto-kali', name: 'Kali', origin: 'Naruto', description: 'Kaioken pra vencer purrinha', image: 'assets/images/nominees/medalha-naruto/kali.jpg' },
-        { id: 'naruto-groon', name: 'Groon', origin: 'Naruto', description: 'Cala a boca todo mundo', image: 'assets/images/nominees/medalha-naruto/groon.jpg' },
-        { id: 'naruto-axiom', name: 'Axiom', origin: 'Naruto', description: 'Quem é o mais forte?', image: 'assets/images/nominees/medalha-naruto/axiom.jpg' },
-        { id: 'naruto-', name: 'Hukil', origin: 'Naruto', description: 'OUÇAM-ME TODOS', image: 'assets/images/nominees/medalha-naruto/magni.jpg' }
+        { id: 'naruto-ludinus', name: 'Ludinus', origin: 'Destruir a Lua pra não virar alcóolatra', description: '', image: 'assets/images/nominees/medalha-naruto/ludinus.jpg' },
+        { id: 'naruto-kali', name: 'Kali', origin: 'Kaioken pra vencer purrinha', description: '', image: 'assets/images/nominees/medalha-naruto/kali.jpg' },
+        { id: 'naruto-groon', name: 'Groon', origin: 'Cala a boca todo mundo', description: '', image: 'assets/images/nominees/medalha-naruto/groon.jpg' },
+        { id: 'naruto-axiom', name: 'Axiom', origin: 'Quem é o mais forte?', description: '', image: 'assets/images/nominees/medalha-naruto/axiom.jpg' },
+        { id: 'naruto-', name: 'Hukil', origin: 'OUÇAM-ME TODOS', description: '', image: 'assets/images/nominees/medalha-naruto/magni.jpg' }
     ],
     'npc-apepe': [
-        { id: 'apepe-bicho-pau', name: 'Bicho-Pau', origin: 'NPC Apepe', description: 'CARALHOOOOOW.', image: 'assets/images/nominees/npc-apepe/bicho-pau.jpg' },
-        { id: 'apepe-carnica', name: 'Carnica', origin: 'NPC Apepe', description: 'Carroça de VIADOS', image: 'assets/images/nominees/npc-apepe/carnica.jpg' },
-        { id: 'apepe-mustafa', name: 'Mustafa', origin: 'NPC Apepe', description: 'Eu volto depois', image: 'assets/images/nominees/npc-apepe/mustafa.jpg' },
-        { id: 'apepe-coletor-impostos', name: 'Coletor de Impostos', origin: 'NPC Apepe', description: 'TEMKI PAGA OK', image: 'assets/images/nominees/npc-apepe/coletor-de-impostos.jpg' },
-        { id: 'apepe-andrei', name: 'Andrei', origin: 'NPC Apepe', description: 'Este sujeito da o cu com altissima proficiencia', image: 'assets/images/nominees/npc-apepe/andrei.jpg' }
+        { id: 'apepe-bicho-pau', name: 'Bicho-Pau', origin: 'CARALHOOOOOW.', description: '', image: 'assets/images/nominees/npc-apepe/bicho-pau.jpg' },
+        { id: 'apepe-carnica', name: 'Carnica', origin: 'Carroça de VIADOS', description: '', image: 'assets/images/nominees/npc-apepe/carnica.jpg' },
+        { id: 'apepe-mustafa', name: 'Mustafa', origin: 'Eu volto depois', description: '', image: 'assets/images/nominees/npc-apepe/mustafa.jpg' },
+        { id: 'apepe-coletor-impostos', name: 'Coletor de Impostos', origin: 'TEMKI PAGA OK', description: '', image: 'assets/images/nominees/npc-apepe/coletor-de-impostos.jpg' },
+        { id: 'apepe-andrei', name: 'Andrei', origin: 'Este sujeito da o cu com altissima proficiencia', description: '', image: 'assets/images/nominees/npc-apepe/andrei.jpg' }
     ],
     'npc-micao': [
-        { id: 'micao-galsariad', name: 'Galsariad', origin: 'NPC Micao', description: 'FAZ ALGUMA COISA INUTIL', image: 'assets/images/nominees/npc-micao/galsariad.jpg' },
-        { id: 'micao-saleem', name: 'Saleem', origin: 'NPC Micao', description: 'Saleem Muleke', image: 'assets/images/nominees/npc-micao/saleem.jpg' },
-        { id: 'micao-sabugson', name: 'Sabugson', origin: 'NPC Micao', description: 'Pra abandonar filha eu sou bom', image: 'assets/images/nominees/npc-micao/sabugson.jpg' },
-        { id: 'micao-nanael', name: 'Nanael', origin: 'NPC Micao', description: '🥰🥰🥰🥰🥰', image: 'assets/images/nominees/npc-micao/nanael.jpg' },
-        { id: 'micao-fjord', name: 'Fjord', origin: 'NPC Micao', description: 'Cara... Eu sou muito foda.', image: 'assets/images/nominees/npc-micao/fjord.jpg' }
+        { id: 'micao-galsariad', name: 'Galsariad', origin: 'FAZ ALGUMA COISA INUTIL', description: '', image: 'assets/images/nominees/npc-micao/galsariad.jpg' },
+        { id: 'micao-saleem', name: 'Saleem', origin: 'Saleem Muleke', description: '', image: 'assets/images/nominees/npc-micao/saleem.jpg' },
+        { id: 'micao-sabugson', name: 'Sabugson', origin: 'Pra abandonar filha eu sou bom', description: '', image: 'assets/images/nominees/npc-micao/sabugson.jpg' },
+        { id: 'micao-nanael', name: 'Nanael', origin: '🥰🥰🥰🥰🥰', description: '', image: 'assets/images/nominees/npc-micao/nanael.jpg' },
+        { id: 'micao-fjord', name: 'Fjord', origin: 'Cara... Eu sou muito foda.', description: '', image: 'assets/images/nominees/npc-micao/fjord.jpg' }
     ],
     'npc-estou-ajudando': [
-        { id: 'ajudando-galsariad', name: 'Galsariad', origin: 'NPC Estou Ajudando', description: 'Insira aqui comentário desnecessario', image: 'assets/images/nominees/npc-estou-ajudando/galsariad.jpg' },
-        { id: 'ajudando-kadan', name: 'Kadan', origin: 'NPC Estou Ajudando', description: 'Mas quem disse que eu quero ajudar?', image: 'assets/images/nominees/npc-estou-ajudando/kadan.jpg' },
-        { id: 'ajudando-andrei', name: 'Andrei', origin: 'NPC Estou Ajudando', description: 'Não tem jeito vamos ter que comer terra', image: 'assets/images/nominees/npc-estou-ajudando/andrei.jpg' },
-        { id: 'ajudando-fjord', name: 'Fjord', origin: 'NPC Estou Ajudando', description: 'Tipo... Realmente muito foda.', image: 'assets/images/nominees/npc-estou-ajudando/fjord.jpg' },
-        { id: 'ajudando-nanael', name: 'Nanael', origin: 'NPC Estou Ajudando', description: '🥰🥰🥰 Oiiiii 🥰🥰🥰', image: 'assets/images/nominees/npc-estou-ajudando/nanael.jpg' }
+        { id: 'ajudando-galsariad', name: 'Galsariad', origin: 'Insira aqui comentário desnecessario', description: '', image: 'assets/images/nominees/npc-estou-ajudando/galsariad.jpg' },
+        { id: 'ajudando-kadan', name: 'Kadan', origin: 'Mas quem disse que eu quero ajudar?', description: '', image: 'assets/images/nominees/npc-estou-ajudando/kadan.jpg' },
+        { id: 'ajudando-andrei', name: 'Andrei', origin: 'Não tem jeito vamos ter que comer terra', description: '', image: 'assets/images/nominees/npc-estou-ajudando/andrei.jpg' },
+        { id: 'ajudando-fjord', name: 'Fjord', origin: 'Tipo... Realmente muito foda.', description: '', image: 'assets/images/nominees/npc-estou-ajudando/fjord.jpg' },
+        { id: 'ajudando-nanael', name: 'Nanael', origin: '🥰🥰🥰 Oiiiii 🥰🥰🥰', description: '', image: 'assets/images/nominees/npc-estou-ajudando/nanael.jpg' }
     ],
     'colirio-capricho': [
-        { id: 'colirio-lindao', name: 'Lindao', origin: 'Colirio Capricho', description: 'Diclupa', image: 'assets/images/nominees/colirio-capricho/lindao.jpg' },
-        { id: 'colirio-essek', name: 'Essek', origin: 'Colirio Capricho', description: 'Não é creme, é pouca exposição ao sol.', image: 'assets/images/nominees/colirio-capricho/essek.jpg' },
-        { id: 'colirio-cesar-thrune', name: 'Cesar Thrune', origin: 'Colirio Capricho', description: 'Um macho de verdade', image: 'assets/images/nominees/colirio-capricho/cesar-thrune.jpg' },
-        { id: 'colirio-ihmotep', name: 'Ihmotep', origin: 'Colirio Capricho', description: 'Meu estilista era um diabo', image: 'assets/images/nominees/colirio-capricho/ihmotep.jpg' },
-        { id: 'colirio-amon', name: 'Amon', origin: 'Colirio Capricho', description: 'Bem... meu estilista é um diabo.', image: 'assets/images/nominees/colirio-capricho/amon.jpg' }
+        { id: 'colirio-lindao', name: 'Lindao', origin: 'Diclupa', description: '', image: 'assets/images/nominees/colirio-capricho/lindao.jpg' },
+        { id: 'colirio-essek', name: 'Essek', origin: 'Não é creme, é pouca exposição ao sol.', description: '', image: 'assets/images/nominees/colirio-capricho/essek.jpg' },
+        { id: 'colirio-cesar-thrune', name: 'Cesar Thrune', origin: 'Um macho de verdade', description: '', image: 'assets/images/nominees/colirio-capricho/cesar-thrune.jpg' },
+        { id: 'colirio-ihmotep', name: 'Ihmotep', origin: 'Meu estilista era um diabo', description: '', image: 'assets/images/nominees/colirio-capricho/ihmotep.jpg' },
+        { id: 'colirio-amon', name: 'Amon', origin: 'Bem... meu estilista é um diabo.', description: '', image: 'assets/images/nominees/colirio-capricho/amon.jpg' }
     ],
     'melhor-tilt': [
-        { id: 'tilt-jena', name: 'Jena', origin: 'Estupefied 1', description: 'Stupefied 1', image: 'assets/images/nominees/melhor-tilt/jena.jpg' },
-        { id: 'tilt-ryuk', name: 'Ryuk', origin: 'Erros Punidos', description: 'Todo erro é punido', image: 'assets/images/nominees/melhor-tilt/ryuk.jpg' },
-        { id: 'tilt-midgard', name: 'Midgard', origin: 'Rubinho', description: 'Aventura que vem eu chego aí', image: 'assets/images/nominees/melhor-tilt/midgard.jpg' },
-        { id: 'tilt-shiki', name: 'Shiki', origin: 'Matador de Petista', description: 'RELA NA CARROÇA PETISTAS', image: 'assets/images/nominees/melhor-tilt/shiki.jpg' },
-        { id: 'tilt-drakx', name: 'Drakx', origin: 'Nao ta Medieval', description: 'Minha familia bebe chumbo', image: 'assets/images/nominees/melhor-tilt/drakx.jpg' }
+        { id: 'tilt-jena', name: 'Jena', origin: 'Stupefied 1', description: '', image: 'assets/images/nominees/melhor-tilt/jena.jpg' },
+        { id: 'tilt-ryuk', name: 'Ryuk', origin: 'Todo erro é punido', description: '', image: 'assets/images/nominees/melhor-tilt/ryuk.jpg' },
+        { id: 'tilt-midgard', name: 'Midgard', origin: 'Aventura que vem eu chego aí', description: '', image: 'assets/images/nominees/melhor-tilt/midgard.jpg' },
+        { id: 'tilt-shiki', name: 'Shiki', origin: 'RELA NA CARROÇA PETISTAS', description: '', image: 'assets/images/nominees/melhor-tilt/shiki.jpg' },
+        { id: 'tilt-drakx', name: 'Drakx', origin: 'Minha familia bebe chumbo', description: '', image: 'assets/images/nominees/melhor-tilt/drakx.jpg' }
     ],
     'pressao-baxo': [
-        { id: 'pressao-dragao-de-otari', name: 'Dragao de Otari', origin: 'Pressao Baxo', description: 'Achadores de Caminho', image: 'assets/images/nominees/pressao-baxo/dragao-de-otari.jpg' },
-        { id: 'pressao-cemiterio-theladil', name: 'Cemiterio de Shindu\'ryarin', origin: 'Pressao Baxo', description: 'Reflexo Arcano', image: 'assets/images/nominees/pressao-baxo/cemiterio-theladil.jpg' },
-        { id: 'pressao-dragao-mumia', name: 'O Dragao Mumia', origin: 'Pressao Baxo', description: 'Leagar', image: 'assets/images/nominees/pressao-baxo/dragao-mumia.jpg' },
-        { id: 'pressao-o-fanatico', name: 'O Fanatico', origin: 'Pressao Baxo', description: 'Maldição das Ilhas Swavain', image: 'assets/images/nominees/pressao-baxo/o-fanatico.jpg' },
-        { id: 'pressao-axiom-dragao', name: 'Axiom Dragao', origin: 'Pressao Baxo', description: 'Hic Irrumabus', image: 'assets/images/nominees/pressao-baxo/axiom-dragao.jpg' }
+        { id: 'pressao-dragao-de-otari', name: 'Dragao de Otari', origin: 'Achadores de Caminho', description: '', image: 'assets/images/nominees/pressao-baxo/dragao-de-otari.jpg' },
+        { id: 'pressao-cemiterio-theladil', name: 'Cemiterio de Shindu\'ryarin', origin: 'Reflexo Arcano', description: '', image: 'assets/images/nominees/pressao-baxo/cemiterio-theladil.jpg' },
+        { id: 'pressao-dragao-mumia', name: 'O Dragao Mumia', origin: 'Leagar', description: '', image: 'assets/images/nominees/pressao-baxo/dragao-mumia.jpg' },
+        { id: 'pressao-o-fanatico', name: 'O Fanatico', origin: 'Maldição das Ilhas Swavain', description: '', image: 'assets/images/nominees/pressao-baxo/o-fanatico.jpg' },
+        { id: 'pressao-axiom-dragao', name: 'Axiom Dragao', origin: 'Hic Irrumabus', description: '', image: 'assets/images/nominees/pressao-baxo/axiom-dragao.jpg' }
     ],
     'dento': [
-        { id: 'dento-suria-dwendal', name: 'Suria Dwendal', origin: 'Dento', description: 'Não podem ver uma casada', image: 'assets/images/nominees/dento/suria-dwendal.jpg' },
-        { id: 'dento-lannathia', name: 'Lannathia', origin: 'Dento', description: 'Nem com guindaste pra me tirar de dentro', image: 'assets/images/nominees/dento/lannathia.jpg' },
-        { id: 'dento-vess', name: 'Vess', origin: 'Dento', description: 'Ganhar Iphone nunca foi tão facil', image: 'assets/images/nominees/dento/vess.jpg' },
-        { id: 'dento-rubi-marinho', name: 'Rubi Marinho', origin: 'Dento', description: 'Invadindo seu espaço pessoal', image: 'assets/images/nominees/dento/rubi-marinho.jpg' },
-        { id: 'dento-vayshlin', name: 'Vayshlin', origin: 'Dento', description: 'Mulher é muito foda', image: 'assets/images/nominees/dento/vayshlin.jpg' }
+        { id: 'dento-suria-dwendal', name: 'Suria Dwendal', origin: 'Não podem ver uma casada', description: '', image: 'assets/images/nominees/dento/suria-dwendal.jpg' },
+        { id: 'dento-lannathia', name: 'Lannathia', origin: 'Nem com guindaste pra me tirar de dentro', description: '', image: 'assets/images/nominees/dento/lannathia.jpg' },
+        { id: 'dento-vess', name: 'Vess', origin: 'Ganhar Iphone nunca foi tão facil', description: '', image: 'assets/images/nominees/dento/vess.jpg' },
+        { id: 'dento-rubi-marinho', name: 'Rubi Marinho', origin: 'Invadindo seu espaço pessoal', description: '', image: 'assets/images/nominees/dento/rubi-marinho.jpg' },
+        { id: 'dento-vayshlin', name: 'Vayshlin', origin: 'Mulher é muito foda', description: '', image: 'assets/images/nominees/dento/vayshlin.jpg' }
     ],
     'categoria-shiki': [
-        { id: 'shiki-salvar-kasimir', name: 'Salvar o Kasimir', origin: 'Categoria Shiki', description: 'Contribuindo pra conversa', image: 'assets/images/nominees/categoria-shiki/salvar-o-kasimir.jpg' },
-        { id: 'shiki-buscar-quarto', name: 'Buscar um quarto', origin: 'Categoria Shiki', description: 'NAO SEI OQ FAZER, QUARTO.', image: 'assets/images/nominees/categoria-shiki/buscar-um-quarto.jpg' },
-        { id: 'shiki-jena-confuso', name: 'Exidrian Godlike', origin: 'Categoria Shiki', description: 'Porra ja nao falei isso pra vocês umas 3 vezes?', image: 'assets/images/nominees/categoria-shiki/jena-confuso.jpg' },
-        { id: 'shiki-e-o-colar', name: 'Ele estava de colar?', origin: 'Categoria Shiki', description: 'Bacana mas e o colar?', image: 'assets/images/nominees/categoria-shiki/e-o-colar.jpg' },
-        { id: 'shiki-olha-meu-pombo', name: 'Olha meu pombo', origin: 'Categoria Shiki', description: 'Meu pombo galera 😃', image: 'assets/images/nominees/categoria-shiki/olha-meu-pombo.jpg' }
+        { id: 'shiki-salvar-kasimir', name: 'Salvar o Kasimir', origin: 'Contribuindo pra conversa', description: '', image: 'assets/images/nominees/categoria-shiki/salvar-o-kasimir.jpg' },
+        { id: 'shiki-buscar-quarto', name: 'Buscar um quarto', origin: 'NAO SEI OQ FAZER, QUARTO.', description: '', image: 'assets/images/nominees/categoria-shiki/buscar-um-quarto.jpg' },
+        { id: 'shiki-jena-confuso', name: 'Exidrian Godlike', origin: 'Porra ja nao falei isso pra vocês umas 3 vezes?', description: '', image: 'assets/images/nominees/categoria-shiki/jena-confuso.jpg' },
+        { id: 'shiki-e-o-colar', name: 'Ele estava de colar?', origin: 'Bacana mas e o colar?', description: '', image: 'assets/images/nominees/categoria-shiki/e-o-colar.jpg' },
+        { id: 'shiki-olha-meu-pombo', name: 'Olha meu pombo', origin: 'Meu pombo galera 😃', description: '', image: 'assets/images/nominees/categoria-shiki/olha-meu-pombo.jpg' }
     ]
 };
 
