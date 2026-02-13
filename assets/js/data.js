@@ -164,11 +164,11 @@ const CATEGORIES = [
 // Indicados/Nomeados por categoria (estrutura para 20 categorias)
 const NOMINEES = {
     'melhor-npc': [
-        { id: 'npc-essek', name: 'Essek', origin: 'O Mão Negra', description: '', image: 'assets/images/nominees/melhor-npc/essek.webp' },
-        { id: 'npc-mako', name: 'Mako', origin: 'O Rei Eterno', description: '', image: 'assets/images/nominees/melhor-npc/mako.png' },
-        { id: 'npc-fuligem', name: 'Fuligem', origin: 'Capitão do Sussuro', description: '', image: 'assets/images/nominees/melhor-npc/fuligem.png' },
-        { id: 'npc-kadan', name: 'Kadan', origin: 'O Terror Noturno', description: '', image: 'assets/images/nominees/melhor-npc/kadan.png' },
-        { id: 'npc-cesar', name: 'Cesar', origin: 'Guardião do Ouro Real', description: '', image: 'assets/images/nominees/melhor-npc/cesar.png' }
+        { id: 'npc-essek', name: 'Essek', origin: 'O Mão Negra', description: '', image: 'assets/images/nominees/melhor-npc/essek.jpg' },
+        { id: 'npc-mako', name: 'Mako', origin: 'O Rei Eterno', description: '', image: 'assets/images/nominees/melhor-npc/mako.jpg' },
+        { id: 'npc-fuligem', name: 'Fuligem', origin: 'Capitão do Sussuro', description: '', image: 'assets/images/nominees/melhor-npc/fuligem.jpg' },
+        { id: 'npc-kadan', name: 'Kadan', origin: 'O Terror Noturno', description: '', image: 'assets/images/nominees/melhor-npc/kadan.jpg' },
+        { id: 'npc-cesar', name: 'Cesar', origin: 'Guardião do Ouro Real', description: '', image: 'assets/images/nominees/melhor-npc/cesar.jpg' }
     ],
     'melhor-aventura': [
         { id: 'aventura-a-corrente-a-ferida-de-burok', name: 'A Corrente', origin: 'A Ferida de Burok', description: '', image: 'assets/images/nominees/melhor-aventura/a-corrente-a-ferida-de-burok.jpg' },
