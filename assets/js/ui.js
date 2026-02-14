@@ -306,17 +306,110 @@ const UI = (function() {
 
     let currentCategory = null;
     let currentCategoryIndex = 0;
+    const preloadedNomineeImages = new Set();
+    const pendingNomineePreloads = new Map();
+    const IMAGE_PRELOAD_BUDGET_MS = 700;
+
+    /**
+     * Retorna URL da imagem do indicado (com fallback)
+     * @param {Object} nominee - Indicado
+     * @returns {string}
+     */
+    function getNomineeImageUrl(nominee) {
+        return nominee.image || `https://placehold.co/200x280/1a1a25/d4af37?text=${encodeURIComponent(nominee.name.charAt(0))}`;
+    }
+
+    /**
+     * Pré-carrega uma imagem e evita requisições duplicadas
+     * @param {string} url - URL da imagem
+     * @returns {Promise<void>}
+     */
+    function preloadImage(url) {
+        if (!url || preloadedNomineeImages.has(url)) {
+            return Promise.resolve();
+        }
+
+        const existingPreload = pendingNomineePreloads.get(url);
+        if (existingPreload) {
+            return existingPreload;
+        }
+
+        const preloadPromise = new Promise(resolve => {
+            const img = new Image();
+            let finished = false;
+
+            const finish = (loaded) => {
+                if (finished) return;
+                finished = true;
+                if (loaded) {
+                    preloadedNomineeImages.add(url);
+                }
+                resolve();
+            };
+
+            img.onload = () => finish(true);
+            img.onerror = () => finish(false);
+            img.src = url;
+
+            if (img.complete) {
+                finish(true);
+            }
+        }).finally(() => {
+            pendingNomineePreloads.delete(url);
+        });
+
+        pendingNomineePreloads.set(url, preloadPromise);
+        return preloadPromise;
+    }
+
+    /**
+     * Pré-carrega imagens da categoria atual com orçamento de espera curto
+     * @param {Object} category - Categoria
+     * @param {number} timeoutMs - Tempo máximo de espera em ms
+     * @returns {Promise<void>}
+     */
+    function preloadCategoryNomineeImages(category, timeoutMs = IMAGE_PRELOAD_BUDGET_MS) {
+        if (!category) return Promise.resolve();
+
+        const nominees = NOMINEES[category.id] || [];
+        const imageUrls = [...new Set(nominees.map(getNomineeImageUrl).filter(Boolean))];
+
+        if (!imageUrls.length) return Promise.resolve();
+
+        const preloads = Promise.allSettled(imageUrls.map(preloadImage)).then(() => undefined);
+        if (timeoutMs <= 0) return preloads;
+
+        return Promise.race([
+            preloads,
+            new Promise(resolve => setTimeout(resolve, timeoutMs))
+        ]);
+    }
+
+    /**
+     * Pré-carrega imagens das categorias vizinhas em segundo plano
+     * @param {number} index - Índice da categoria atual
+     */
+    function preloadAdjacentCategories(index) {
+        [index - 1, index + 1].forEach(adjacentIndex => {
+            const adjacentCategory = CATEGORIES[adjacentIndex];
+            if (!adjacentCategory) return;
+            preloadCategoryNomineeImages(adjacentCategory, 0);
+        });
+    }
 
     /**
      * Abre modal de votação
      * @param {Object} category - Categoria selecionada
      */
-    function openVotingModal(category) {
+    async function openVotingModal(category) {
         currentCategory = category;
         currentCategoryIndex = CATEGORIES.findIndex(c => c.id === category.id);
         
         // Atualiza conteúdo da categoria
         updateCategoryDisplay(category);
+
+        // Aguarda um curto pré-carregamento para evitar imagens "pipocando" após a animação
+        await preloadCategoryNomineeImages(category);
 
         // Renderiza indicados
         renderNominees(category);
@@ -332,6 +425,9 @@ const UI = (function() {
             elements.votingModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
+
+        // Aquece categorias adjacentes para navegação mais fluida
+        preloadAdjacentCategories(currentCategoryIndex);
     }
 
     /**
@@ -371,13 +467,15 @@ const UI = (function() {
         grid.style.transition = 'opacity 0.15s ease';
         grid.style.opacity = '0';
 
-        setTimeout(() => {
+        setTimeout(async () => {
             currentCategoryIndex = newIndex;
             currentCategory = CATEGORIES[currentCategoryIndex];
             updateCategoryDisplay(currentCategory);
+            await preloadCategoryNomineeImages(currentCategory);
             renderNominees(currentCategory);
             updateNavButtons();
             renderDeck();
+            preloadAdjacentCategories(currentCategoryIndex);
 
             grid.style.opacity = '1';
         }, 150);
@@ -470,7 +568,7 @@ const UI = (function() {
             card.style.animationDelay = `${index * 0.1}s`;
 
             // Imagem placeholder se não existir - formato vertical para tarô
-            const imageUrl = nominee.image || `https://placehold.co/200x280/1a1a25/d4af37?text=${encodeURIComponent(nominee.name.charAt(0))}`;
+            const imageUrl = getNomineeImageUrl(nominee);
 
             // Determina texto do badge
             let badgeText = '';
@@ -481,7 +579,7 @@ const UI = (function() {
                 <div class="card-inner">
                     <div class="card-front">
                         <div class="nominee-image">
-                            <img src="${imageUrl}" alt="${nominee.name}" loading="lazy">
+                            <img src="${imageUrl}" alt="${nominee.name}" loading="eager" decoding="async" fetchpriority="${index < 2 ? 'high' : 'auto'}">
                         </div>
                         <div class="nominee-info">
                             <h4 class="nominee-name">${nominee.name}</h4>
