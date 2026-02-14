@@ -193,7 +193,7 @@ const NOMINEES = {
     ],
     'medalha-trump': [
         { id: 'trump-macaco-monster-hunter', name: 'Macaco Akuma', origin: 'Agora ele vai rolar iniciativa...', description: '', image: 'assets/images/nominees/medalha-trump/macaco-monster-hunter.jpg' },
-        { id: 'trump-plot-o-cavalo', name: 'Plot', origin: 'O Cavalo Quantico Não-Newtoniano', description: '', image: 'assets/images/nominees/medalha-trump/plot-o-cavalo.jpg' },
+        { id: 'trump-plot-o-cavalo', name: 'Plot', origin: 'O Cavalo Quantico', description: '', image: 'assets/images/nominees/medalha-trump/plot-o-cavalo.jpg' },
         { id: 'trump-adaga-sniper', name: 'Adaga Sniper', origin: 'Perfeita para o Combate', description: '', image: 'assets/images/nominees/medalha-trump/adaga-sniper.jpg' },
         { id: 'trump-drakx-jackie-chan', name: 'Montaria do Drakx', origin: 'Sim ela corre, ataca e cura', description: '', image: 'assets/images/nominees/medalha-trump/drakx-jackie-chan.jpg' },
         { id: 'trump-votacoes-do-grupo', name: 'Enquetes', origin: 'Todo voto é Nulo', description: '', image: 'assets/images/nominees/medalha-trump/votacoes-do-grupo.jpg' }
