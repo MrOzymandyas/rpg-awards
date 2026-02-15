@@ -221,7 +221,7 @@ const NOMINEES = {
     ],
     'melhor-ship': [
         { id: 'ship-amon-deimos', name: 'Amon & Deimos', origin: 'Obrigado pelo... Cajadão.', description: '', image: 'assets/images/nominees/melhor-ship/amon-deimos.jpg' },
-        { id: 'ship-andrei-geryon', name: 'Andrei & Geryon', origin: 'Vai amassar quem com esse revolver?', description: '', image: 'assets/images/nominees/melhor-ship/andrei-geryon.jpg' },
+        { id: 'ship-andrei-geryon', name: 'Andrei & Geryon', origin: 'Vai onde quem armado assim?', description: '', image: 'assets/images/nominees/melhor-ship/andrei-geryon.jpg' },
         { id: 'ship-fenleriel-academia', name: 'Fenleriel & Zivan', origin: 'Me ajuda com esse supino...', description: '', image: 'assets/images/nominees/melhor-ship/fenleriel-dono-da-academia.jpg' },
         { id: 'ship-bertrand-ludinus', name: 'Bertrand & Ludinus', origin: 'Ayaya... Meu rei.', description: '', image: 'assets/images/nominees/melhor-ship/bertrand-ludinus.jpg' },
         { id: 'ship-khaine-evesto', name: 'Khaine & Evesto', origin: 'Ja te mostrei... O Anel?', description: '', image: 'assets/images/nominees/melhor-ship/khaine-evesto.jpg' }
