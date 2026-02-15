@@ -306,6 +306,10 @@ const UI = (function() {
 
     let currentCategory = null;
     let currentCategoryIndex = 0;
+    let summaryDeckData = [];
+    let summaryDeckIndex = 0;
+    let summaryDeckTransitionDirection = 0;
+    let summaryStageAnimationTimer = null;
     const preloadedNomineeImages = new Set();
     const pendingNomineePreloads = new Map();
     const IMAGE_PRELOAD_BUDGET_MS = 700;
@@ -769,59 +773,208 @@ const UI = (function() {
         if (!elements.votingSummary) return;
 
         const userVotes = Storage.getUserVotes();
-        elements.votingSummary.innerHTML = '';
-
-        CATEGORIES.forEach(category => {
+        summaryDeckData = CATEGORIES.map(category => {
             const vote = userVotes[category.id];
             const firstNominee = vote?.firstChoice ? getNomineeById(category.id, vote.firstChoice.nomineeId) : null;
             const secondNominee = vote?.secondChoice ? getNomineeById(category.id, vote.secondChoice.nomineeId) : null;
 
-            const card = document.createElement('div');
-            card.className = 'summary-card';
-            card.tabIndex = 0;
-            card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', `Revisar categoria ${category.number}: ${category.title}`);
-
-            const firstImageUrl = firstNominee?.image 
-                || `https://placehold.co/80x80/1a1a25/d4af37?text=${firstNominee?.name?.charAt(0) || '?'}`;
-            const secondImageUrl = secondNominee?.image 
-                || `https://placehold.co/60x60/1a1a25/808080?text=${secondNominee?.name?.charAt(0) || '?'}`;
-
-            card.innerHTML = `
-                <span class="summary-card-number">#${String(category.number).padStart(2, '0')}</span>
-                <div class="summary-card-info">
-                    <span class="summary-card-category">${category.title}</span>
-                    <div class="summary-card-choices">
-                        <span class="summary-choice first">
-                            <span class="choice-badge">1º</span>
-                            ${firstNominee ? firstNominee.name : 'Não votado'}
-                        </span>
-                        <span class="summary-choice second">
-                            <span class="choice-badge">2º</span>
-                            ${secondNominee ? secondNominee.name : 'Não votado'}
-                        </span>
-                    </div>
-                </div>
-                <div class="summary-card-images">
-                    <div class="summary-image first">
-                        <img src="${firstImageUrl}" alt="${firstNominee?.name || ''}" loading="lazy">
-                    </div>
-                    <div class="summary-image second">
-                        <img src="${secondImageUrl}" alt="${secondNominee?.name || ''}" loading="lazy">
-                    </div>
-                </div>
-            `;
-
-            card.addEventListener('click', () => openCategoryFromSummary(category.id));
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openCategoryFromSummary(category.id);
-                }
-            });
-
-            elements.votingSummary.appendChild(card);
+            return {
+                categoryId: category.id,
+                categoryNumber: String(category.number).padStart(2, '0'),
+                categoryTitle: category.title,
+                categoryDescription: category.description,
+                firstNominee,
+                secondNominee,
+                firstName: firstNominee ? firstNominee.name : 'Não votado',
+                secondName: secondNominee ? secondNominee.name : 'Não votado',
+                firstOrigin: firstNominee?.origin || 'Sem escolha definida',
+                secondOrigin: secondNominee?.origin || 'Sem escolha definida',
+                firstImageUrl: firstNominee?.image || `https://placehold.co/280x400/1a1a25/d4af37?text=${firstNominee?.name?.charAt(0) || '?'}`,
+                secondImageUrl: secondNominee?.image || `https://placehold.co/220x320/1a1a25/808080?text=${secondNominee?.name?.charAt(0) || '?'}`,
+                isIncomplete: !firstNominee || !secondNominee
+            };
         });
+
+        if (!summaryDeckData.length) {
+            elements.votingSummary.innerHTML = '';
+            return;
+        }
+
+        summaryDeckIndex = Math.max(0, Math.min(summaryDeckIndex, summaryDeckData.length - 1));
+
+        elements.votingSummary.innerHTML = `
+            <div class="summary-deck-shell">
+                <button class="summary-nav prev" type="button" aria-label="Carta anterior">◀</button>
+                <div class="summary-stage" data-summary-stage></div>
+                <button class="summary-nav next" type="button" aria-label="Próxima carta">▶</button>
+            </div>
+            <div class="summary-deck-footer">
+                <span class="summary-deck-counter" data-summary-counter></span>
+                <div class="summary-hand" data-summary-hand></div>
+            </div>
+        `;
+
+        const prevBtn = elements.votingSummary.querySelector('.summary-nav.prev');
+        const nextBtn = elements.votingSummary.querySelector('.summary-nav.next');
+        if (prevBtn) prevBtn.addEventListener('click', () => shiftSummaryDeck(-1));
+        if (nextBtn) nextBtn.addEventListener('click', () => shiftSummaryDeck(1));
+
+        updateSummaryDeckUI();
+    }
+
+    function shiftSummaryDeck(step) {
+        setSummaryDeckIndex(summaryDeckIndex + step);
+    }
+
+    function setSummaryDeckIndex(nextIndex) {
+        if (!summaryDeckData.length) return;
+        const clampedIndex = Math.max(0, Math.min(nextIndex, summaryDeckData.length - 1));
+        if (clampedIndex === summaryDeckIndex) return;
+        summaryDeckTransitionDirection = clampedIndex > summaryDeckIndex ? 1 : -1;
+        summaryDeckIndex = clampedIndex;
+        updateSummaryDeckUI();
+    }
+
+    function updateSummaryDeckUI() {
+        if (!elements.votingSummary || !summaryDeckData.length) return;
+
+        const stage = elements.votingSummary.querySelector('[data-summary-stage]');
+        const hand = elements.votingSummary.querySelector('[data-summary-hand]');
+        const counter = elements.votingSummary.querySelector('[data-summary-counter]');
+        const prevBtn = elements.votingSummary.querySelector('.summary-nav.prev');
+        const nextBtn = elements.votingSummary.querySelector('.summary-nav.next');
+
+        if (!stage || !hand || !counter) return;
+
+        if (stage.children.length !== summaryDeckData.length) {
+            stage.innerHTML = '';
+            summaryDeckData.forEach((item, index) => {
+                const card = document.createElement('article');
+                card.className = 'summary-card';
+                card.setAttribute('role', 'button');
+
+                card.innerHTML = `
+                    <div class="summary-card-header">
+                        <span class="summary-card-number">#${item.categoryNumber}</span>
+                        <span class="summary-card-title">${item.categoryTitle}</span>
+                    </div>
+                    <div class="summary-card-art">
+                        <img class="summary-art-main" src="${item.firstImageUrl}" alt="${item.firstName}" loading="lazy">
+                        <img class="summary-art-side" src="${item.secondImageUrl}" alt="${item.secondName}" loading="lazy">
+                    </div>
+                    <div class="summary-card-body">
+                        <div class="summary-choice-row first">
+                            <span class="choice-badge">1º</span>
+                            <div class="choice-text">
+                                <span class="choice-name">${item.firstName}</span>
+                                <span class="choice-origin">${item.firstOrigin}</span>
+                            </div>
+                        </div>
+                        <div class="summary-choice-row second">
+                            <span class="choice-badge">2º</span>
+                            <div class="choice-text">
+                                <span class="choice-name">${item.secondName}</span>
+                                <span class="choice-origin">${item.secondOrigin}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="summary-card-hint">Clique para puxar carta</span>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (index === summaryDeckIndex) {
+                        openCategoryFromSummary(item.categoryId);
+                    } else {
+                        setSummaryDeckIndex(index);
+                    }
+                });
+
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (index === summaryDeckIndex) {
+                            openCategoryFromSummary(item.categoryId);
+                        } else {
+                            setSummaryDeckIndex(index);
+                        }
+                    }
+                });
+
+                stage.appendChild(card);
+            });
+        }
+
+        if (summaryDeckTransitionDirection !== 0) {
+            stage.classList.remove('is-animating', 'is-forward', 'is-backward');
+            void stage.offsetWidth;
+            stage.classList.add('is-animating');
+            stage.classList.add(summaryDeckTransitionDirection > 0 ? 'is-forward' : 'is-backward');
+
+            if (summaryStageAnimationTimer) {
+                clearTimeout(summaryStageAnimationTimer);
+            }
+            summaryStageAnimationTimer = setTimeout(() => {
+                stage.classList.remove('is-animating', 'is-forward', 'is-backward');
+                summaryStageAnimationTimer = null;
+            }, 520);
+        }
+
+        Array.from(stage.children).forEach((node, index) => {
+            const card = node;
+            const item = summaryDeckData[index];
+            const offset = index - summaryDeckIndex;
+            const absOffset = Math.abs(offset);
+
+            card.classList.toggle('incomplete', item.isIncomplete);
+            card.classList.toggle('is-active', offset === 0);
+            card.classList.toggle('is-hidden', absOffset > 2);
+            card.style.setProperty('--offset', String(offset));
+            card.style.setProperty('--abs', String(absOffset));
+            card.style.zIndex = String(120 - absOffset);
+            card.tabIndex = offset === 0 ? 0 : -1;
+            card.setAttribute(
+                'aria-label',
+                `Carta ${index + 1}: categoria ${item.categoryNumber}. ${item.categoryTitle}. 1º ${item.firstName}. 2º ${item.secondName}.`
+            );
+
+            const hint = card.querySelector('.summary-card-hint');
+            if (hint) {
+                hint.textContent = offset === 0 ? 'Enter: revisar categoria' : 'Clique para puxar carta';
+            }
+        });
+
+        if (hand.children.length !== summaryDeckData.length) {
+            hand.innerHTML = '';
+            summaryDeckData.forEach((item, index) => {
+                const handCard = document.createElement('button');
+                handCard.type = 'button';
+                handCard.className = 'summary-hand-card';
+                handCard.setAttribute('aria-label', `Ir para carta ${item.categoryNumber}: ${item.categoryTitle}`);
+                handCard.innerHTML = `
+                    <img src="${item.firstImageUrl}" alt="${item.firstName}" loading="lazy">
+                    <span class="summary-hand-number">#${item.categoryNumber}</span>
+                `;
+                handCard.addEventListener('click', () => setSummaryDeckIndex(index));
+                hand.appendChild(handCard);
+            });
+        }
+
+        Array.from(hand.children).forEach((node, index) => {
+            const handCard = node;
+            const handOffset = index - summaryDeckIndex;
+            const absOffset = Math.abs(handOffset);
+            handCard.classList.toggle('is-active', index === summaryDeckIndex);
+            handCard.classList.toggle('is-hidden', absOffset > 4);
+            handCard.style.setProperty('--hand-offset', String(Math.max(-4, Math.min(4, handOffset))));
+            handCard.style.setProperty('--hand-depth', String(Math.min(absOffset, 4)));
+            handCard.style.zIndex = String(50 - Math.min(absOffset, 9));
+            handCard.tabIndex = absOffset <= 4 ? 0 : -1;
+        });
+
+        counter.textContent = `Carta ${summaryDeckIndex + 1} de ${summaryDeckData.length}`;
+        if (prevBtn) prevBtn.disabled = summaryDeckIndex === 0;
+        if (nextBtn) nextBtn.disabled = summaryDeckIndex === summaryDeckData.length - 1;
+        summaryDeckTransitionDirection = 0;
     }
 
     // ==================== ADMIN ====================
@@ -980,10 +1133,21 @@ const UI = (function() {
             }
             if (elements.votingModal && elements.votingModal.classList.contains('active')) {
                 if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
                     goToPrevCategory();
                 }
                 if (e.key === 'ArrowRight') {
+                    e.preventDefault();
                     goToNextCategory();
+                }
+            } else if (elements.summaryScreen && elements.summaryScreen.classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    shiftSummaryDeck(-1);
+                }
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    shiftSummaryDeck(1);
                 }
             }
         });
