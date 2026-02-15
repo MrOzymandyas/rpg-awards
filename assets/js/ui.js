@@ -66,6 +66,8 @@ const UI = (function() {
         if (elements.totalCategories) {
             elements.totalCategories.textContent = CATEGORIES.length;
         }
+
+        initUIPreferences();
     }
 
     // ==================== LOADING ====================
@@ -96,6 +98,79 @@ const UI = (function() {
         setTimeout(() => {
             hideLoading();
         }, 4000);
+    }
+
+    function initUIPreferences() {
+        try {
+            const savedAudio = localStorage.getItem(UI_PREFS.audioEnabled);
+            audioEnabled = savedAudio === null ? false : savedAudio === 'true';
+        } catch (e) {
+            audioEnabled = false;
+        }
+    }
+
+    function setAudioEnabled(nextValue) {
+        audioEnabled = !!nextValue;
+        try {
+            localStorage.setItem(UI_PREFS.audioEnabled, String(audioEnabled));
+        } catch (e) {}
+        updateSummaryAudioToggle();
+    }
+
+    function ensureAudioEngine() {
+        if (!FEATURE_FLAGS.ENABLE_UI_AUDIO || !audioEnabled) return null;
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        if (!audioCtx) {
+            audioCtx = new Ctx();
+        }
+        if (audioCtx.state === 'suspended' && audioUnlocked) {
+            audioCtx.resume().catch(() => {});
+        }
+        return audioCtx;
+    }
+
+    function unlockAudio() {
+        if (audioUnlocked) return;
+        const ctx = ensureAudioEngine();
+        if (!ctx) return;
+        audioUnlocked = true;
+        if (ctx.state === 'suspended') {
+            ctx.resume().catch(() => {});
+        }
+    }
+
+    function playUiSound(kind) {
+        if (!FEATURE_FLAGS.ENABLE_UI_AUDIO || !audioEnabled) return;
+        const ctx = ensureAudioEngine();
+        if (!ctx) return;
+
+        const now = ctx.currentTime;
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        if (kind === 'vote') {
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(440, now);
+            oscillator.frequency.exponentialRampToValueAtTime(690, now + 0.09);
+            gainNode.gain.setValueAtTime(0.0001, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.025, now + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+            oscillator.start(now);
+            oscillator.stop(now + 0.2);
+            return;
+        }
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(250, now);
+        oscillator.frequency.exponentialRampToValueAtTime(320, now + 0.07);
+        gainNode.gain.setValueAtTime(0.0001, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.018, now + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+        oscillator.start(now);
+        oscillator.stop(now + 0.14);
     }
 
     // ==================== NAVEGAÇÃO ====================
@@ -304,12 +379,30 @@ const UI = (function() {
 
     // ==================== MODAL ====================
 
+    const FEATURE_FLAGS = {
+        ENABLE_DECK_GESTURES: true,
+        ENABLE_UI_AUDIO: true
+    };
+    const UI_PREFS = {
+        audioEnabled: 'rpg_awards_ui_audio_enabled'
+    };
+
     let currentCategory = null;
     let currentCategoryIndex = 0;
     let summaryDeckData = [];
     let summaryDeckIndex = 0;
     let summaryDeckTransitionDirection = 0;
     let summaryStageAnimationTimer = null;
+    let summaryGestureState = {
+        active: false,
+        pointerId: null,
+        startX: 0,
+        deltaX: 0,
+        stageWidth: 0
+    };
+    let audioEnabled = false;
+    let audioCtx = null;
+    let audioUnlocked = false;
     const preloadedNomineeImages = new Set();
     const pendingNomineePreloads = new Map();
     const IMAGE_PRELOAD_BUDGET_MS = 700;
@@ -695,6 +788,7 @@ const UI = (function() {
         if (nomineeId === firstChoiceId) {
             Storage.removeVote(currentCategory.id, 'first');
             showToast('1º lugar removido', 'warning');
+            playUiSound('deck');
             updateCardSelectionUI(null, secondChoiceId);
             return;
         }
@@ -703,6 +797,7 @@ const UI = (function() {
         if (nomineeId === secondChoiceId) {
             Storage.removeVote(currentCategory.id, 'second');
             showToast('2º lugar removido', 'warning');
+            playUiSound('deck');
             updateCardSelectionUI(firstChoiceId, null);
             return;
         }
@@ -712,6 +807,7 @@ const UI = (function() {
             const success = Storage.vote(currentCategory.id, nomineeId, 'first');
             if (success) {
                 showToast('1º lugar escolhido!', 'success');
+                playUiSound('vote');
                 updateCardSelectionUI(nomineeId, secondChoiceId);
             }
             return;
@@ -722,6 +818,7 @@ const UI = (function() {
             const success = Storage.vote(currentCategory.id, nomineeId, 'second');
             if (success) {
                 showToast('2º lugar escolhido! Categoria completa.', 'success');
+                playUiSound('vote');
                 updateCardSelectionUI(firstChoiceId, nomineeId);
                 
                 // Verifica se completou todas as categorias
@@ -744,6 +841,7 @@ const UI = (function() {
         const success = Storage.vote(currentCategory.id, nomineeId, 'second');
         if (success) {
             showToast('2º lugar alterado!', 'success');
+            playUiSound('vote');
             updateCardSelectionUI(firstChoiceId, nomineeId);
         }
     }
@@ -809,7 +907,10 @@ const UI = (function() {
                 <button class="summary-nav next" type="button" aria-label="Próxima carta">▶</button>
             </div>
             <div class="summary-deck-footer">
-                <span class="summary-deck-counter" data-summary-counter></span>
+                <div class="summary-deck-meta">
+                    <span class="summary-deck-counter" data-summary-counter></span>
+                    <button class="summary-audio-toggle" type="button" data-summary-audio-toggle></button>
+                </div>
                 <div class="summary-hand" data-summary-hand></div>
             </div>
         `;
@@ -819,10 +920,28 @@ const UI = (function() {
         if (prevBtn) prevBtn.addEventListener('click', () => shiftSummaryDeck(-1));
         if (nextBtn) nextBtn.addEventListener('click', () => shiftSummaryDeck(1));
 
+        const audioToggle = elements.votingSummary.querySelector('[data-summary-audio-toggle]');
+        if (audioToggle) {
+            audioToggle.addEventListener('click', () => {
+                setAudioEnabled(!audioEnabled);
+                if (audioEnabled) {
+                    unlockAudio();
+                    playUiSound('deck');
+                }
+            });
+        }
+
+        if (FEATURE_FLAGS.ENABLE_DECK_GESTURES) {
+            setupSummaryDeckGestures();
+        }
+
         updateSummaryDeckUI();
     }
 
     function shiftSummaryDeck(step) {
+        if (step !== 0) {
+            playUiSound('deck');
+        }
         setSummaryDeckIndex(summaryDeckIndex + step);
     }
 
@@ -833,6 +952,83 @@ const UI = (function() {
         summaryDeckTransitionDirection = clampedIndex > summaryDeckIndex ? 1 : -1;
         summaryDeckIndex = clampedIndex;
         updateSummaryDeckUI();
+    }
+
+    function updateSummaryAudioToggle() {
+        if (!elements.votingSummary) return;
+        const audioToggle = elements.votingSummary.querySelector('[data-summary-audio-toggle]');
+        if (!audioToggle) return;
+
+        if (!FEATURE_FLAGS.ENABLE_UI_AUDIO) {
+            audioToggle.hidden = true;
+            return;
+        }
+
+        audioToggle.hidden = false;
+        audioToggle.classList.toggle('is-on', audioEnabled);
+        audioToggle.setAttribute('aria-pressed', audioEnabled ? 'true' : 'false');
+        audioToggle.setAttribute('aria-label', audioEnabled ? 'Desativar sons da interface' : 'Ativar sons da interface');
+        audioToggle.textContent = audioEnabled ? 'Som: ON' : 'Som: OFF';
+    }
+
+    function setupSummaryDeckGestures() {
+        if (!elements.votingSummary) return;
+        const stage = elements.votingSummary.querySelector('[data-summary-stage]');
+        if (!stage || stage.dataset.gestureBound === 'true') return;
+
+        const onPointerMove = (e) => {
+            if (!summaryGestureState.active || e.pointerId !== summaryGestureState.pointerId) return;
+            const deltaX = e.clientX - summaryGestureState.startX;
+            summaryGestureState.deltaX = deltaX;
+            stage.style.setProperty('--summary-drag-shift', `${deltaX}px`);
+        };
+
+        const finishGesture = (e, canceled = false) => {
+            if (!summaryGestureState.active || e.pointerId !== summaryGestureState.pointerId) return;
+
+            const deltaX = summaryGestureState.deltaX;
+            const threshold = Math.max(50, summaryGestureState.stageWidth * 0.12);
+            summaryGestureState.active = false;
+            summaryGestureState.pointerId = null;
+            summaryGestureState.deltaX = 0;
+
+            stage.classList.remove('is-dragging');
+            stage.style.removeProperty('--summary-drag-shift');
+
+            if (canceled) return;
+            if (Math.abs(deltaX) < threshold) return;
+            if (deltaX < 0) shiftSummaryDeck(1);
+            if (deltaX > 0) shiftSummaryDeck(-1);
+        };
+
+        stage.addEventListener('pointerdown', (e) => {
+            if (e.button !== undefined && e.button !== 0) return;
+            const interactiveTarget = e.target.closest('.summary-card, .summary-nav, .summary-hand-card, .summary-audio-toggle');
+            if (interactiveTarget && !e.target.closest('.summary-stage')) return;
+
+            summaryGestureState.active = true;
+            summaryGestureState.pointerId = e.pointerId;
+            summaryGestureState.startX = e.clientX;
+            summaryGestureState.deltaX = 0;
+            summaryGestureState.stageWidth = stage.clientWidth || 1;
+
+            stage.classList.add('is-dragging');
+            stage.style.setProperty('--summary-drag-shift', '0px');
+            stage.setPointerCapture(e.pointerId);
+            unlockAudio();
+        });
+
+        stage.addEventListener('pointermove', onPointerMove);
+        stage.addEventListener('pointerup', (e) => finishGesture(e));
+        stage.addEventListener('pointercancel', (e) => finishGesture(e, true));
+        stage.addEventListener('pointerleave', (e) => {
+            if (!summaryGestureState.active) return;
+            if (e.pointerId === summaryGestureState.pointerId && e.pressure === 0) {
+                finishGesture(e, true);
+            }
+        });
+
+        stage.dataset.gestureBound = 'true';
     }
 
     function updateSummaryDeckUI() {
@@ -904,7 +1100,8 @@ const UI = (function() {
             });
         }
 
-        if (summaryDeckTransitionDirection !== 0) {
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (summaryDeckTransitionDirection !== 0 && !reduceMotion) {
             stage.classList.remove('is-animating', 'is-forward', 'is-backward');
             void stage.offsetWidth;
             stage.classList.add('is-animating');
@@ -917,6 +1114,8 @@ const UI = (function() {
                 stage.classList.remove('is-animating', 'is-forward', 'is-backward');
                 summaryStageAnimationTimer = null;
             }, 520);
+        } else {
+            stage.classList.remove('is-animating', 'is-forward', 'is-backward');
         }
 
         Array.from(stage.children).forEach((node, index) => {
@@ -974,6 +1173,7 @@ const UI = (function() {
         counter.textContent = `Carta ${summaryDeckIndex + 1} de ${summaryDeckData.length}`;
         if (prevBtn) prevBtn.disabled = summaryDeckIndex === 0;
         if (nextBtn) nextBtn.disabled = summaryDeckIndex === summaryDeckData.length - 1;
+        updateSummaryAudioToggle();
         summaryDeckTransitionDirection = 0;
     }
 
@@ -1097,6 +1297,8 @@ const UI = (function() {
      * Configura event listeners
      */
     function setupEventListeners() {
+        document.addEventListener('pointerdown', unlockAudio, { passive: true });
+
         // Login form
         if (elements.loginForm) {
             elements.loginForm.addEventListener('submit', handleLogin);

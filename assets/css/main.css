@@ -1429,6 +1429,7 @@ body {
         radial-gradient(circle at 50% 15%, rgba(212, 175, 55, 0.12) 0%, transparent 50%),
         linear-gradient(180deg, rgba(10, 10, 15, 0.9) 0%, rgba(6, 6, 10, 0.98) 100%);
     perspective: 1300px;
+    touch-action: pan-y;
 }
 
 .summary-card {
@@ -1447,7 +1448,7 @@ body {
     box-shadow: 0 18px 34px rgba(0, 0, 0, 0.4);
     transform:
         translate(-50%, -50%)
-        translateX(calc(var(--offset, 0) * 24%))
+        translateX(calc((var(--offset, 0) * 24%) + var(--summary-drag-shift, 0px)))
         translateY(calc(var(--abs, 0) * 14px))
         rotate(calc(var(--offset, 0) * -5deg))
         scale(calc(1 - (var(--abs, 0) * 0.08)));
@@ -1459,6 +1460,10 @@ body {
         box-shadow 320ms ease;
     cursor: pointer;
     will-change: transform, opacity;
+}
+
+.summary-stage.is-dragging .summary-card {
+    transition: none;
 }
 
 .summary-card.is-active {
@@ -1671,12 +1676,42 @@ body {
     gap: 0.38rem;
 }
 
+.summary-deck-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
 .summary-deck-counter {
     text-align: center;
     font-family: var(--font-display);
     font-size: 0.66rem;
     color: var(--color-gold-primary);
     letter-spacing: 0.08em;
+}
+
+.summary-audio-toggle {
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    background: rgba(12, 12, 18, 0.7);
+    color: var(--color-text-secondary);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: border-color var(--transition-base), color var(--transition-base), background var(--transition-base);
+}
+
+.summary-audio-toggle:hover {
+    border-color: rgba(212, 175, 55, 0.62);
+    color: var(--color-gold-primary);
+}
+
+.summary-audio-toggle.is-on {
+    border-color: rgba(212, 175, 55, 0.75);
+    color: var(--color-gold-primary);
+    background: rgba(212, 175, 55, 0.12);
 }
 
 .summary-hand {
@@ -1965,6 +2000,149 @@ body {
     background: var(--gradient-gold);
     border-radius: var(--radius-full);
     transition: width var(--transition-slow);
+}
+
+.live-reveal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-toast) + 20);
+}
+
+.live-reveal-overlay[hidden] {
+    display: none;
+}
+
+.live-reveal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.18), rgba(0, 0, 0, 0.94) 60%);
+    backdrop-filter: blur(6px);
+}
+
+.live-reveal-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: var(--space-lg);
+    padding: clamp(1rem, 2vh, 1.4rem) clamp(1rem, 2vw, 2rem);
+}
+
+.live-reveal-header {
+    text-align: center;
+}
+
+.live-reveal-index {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    color: var(--color-gold-primary);
+    letter-spacing: 0.1em;
+}
+
+.live-reveal-title {
+    margin: 0.35rem 0 0.2rem;
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+    color: var(--color-text-primary);
+}
+
+.live-reveal-step {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.live-reveal-podium {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-lg);
+    align-items: end;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.live-reveal-card {
+    background: linear-gradient(180deg, rgba(19, 19, 30, 0.96), rgba(8, 8, 12, 0.97));
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+    transform: translateY(36px) scale(0.95);
+    opacity: 0;
+    transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 420ms ease, border-color 320ms ease;
+}
+
+.live-reveal-card.revealed {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.live-reveal-card.rank-1 {
+    border-color: rgba(255, 215, 0, 0.65);
+}
+
+.live-reveal-card.rank-2 {
+    border-color: rgba(192, 192, 192, 0.5);
+}
+
+.live-reveal-card.rank-3 {
+    border-color: rgba(205, 127, 50, 0.55);
+}
+
+.live-reveal-card.winner {
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.6), 0 0 34px rgba(255, 215, 0, 0.2);
+}
+
+.live-reveal-card-image {
+    width: 100%;
+    aspect-ratio: 5 / 6;
+    object-fit: cover;
+    display: block;
+}
+
+.live-reveal-card-body {
+    padding: var(--space-md);
+    display: grid;
+    gap: 0.2rem;
+}
+
+.live-reveal-card-rank {
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--color-gold-muted);
+}
+
+.live-reveal-card-name {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    color: var(--color-text-primary);
+}
+
+.live-reveal-card-score {
+    font-size: 0.82rem;
+    color: var(--color-gold-primary);
+}
+
+.live-reveal-card-meta {
+    font-size: 0.74rem;
+    color: var(--color-text-muted);
+}
+
+.live-reveal-overlay.hide-scores .live-reveal-card-score,
+.live-reveal-overlay.hide-scores .live-reveal-card-meta {
+    visibility: hidden;
+}
+
+.live-reveal-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
 }
 
 /* ============================================
@@ -2465,11 +2643,37 @@ body {
         gap: 0.45rem;
     }
 
+    .summary-deck-meta {
+        gap: 0.4rem;
+    }
+
+    .summary-audio-toggle {
+        font-size: 0.56rem;
+        padding: 0.18rem 0.45rem;
+    }
+
     .btn-final,
     .btn-outline {
         width: min(100%, 320px);
     }
     
+    .live-reveal-podium {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+        overflow-y: auto;
+    }
+
+    .live-reveal-card {
+        max-width: 360px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .live-reveal-controls .btn-outline,
+    .live-reveal-controls .btn-final {
+        width: min(100%, 320px);
+    }
+
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -2552,6 +2756,14 @@ body {
 
     .summary-hand-card .summary-hand-number {
         font-size: 0.38rem;
+    }
+
+    .live-reveal-title {
+        font-size: 1.2rem;
+    }
+
+    .live-reveal-step {
+        font-size: 0.75rem;
     }
 }
 

@@ -214,12 +214,36 @@
             <div class="admin-actions">
                 <button id="refresh-btn" class="btn-outline">Atualizar Dados</button>
                 <button id="export-data-btn" class="btn-outline">Exportar JSON</button>
+                <button id="toggle-live-reveal-btn" class="btn-outline">Modo Telão</button>
             </div>
 
             <div class="results-section" id="admin-results">
                 <!-- Results will be populated by JS -->
             </div>
         </div>
+
+        <section id="live-reveal-overlay" class="live-reveal-overlay" hidden>
+            <div class="live-reveal-backdrop"></div>
+            <div class="live-reveal-content">
+                <header class="live-reveal-header">
+                    <span id="live-reveal-category-index" class="live-reveal-index">Categoria 01</span>
+                    <h2 id="live-reveal-category-title" class="live-reveal-title">Reveal</h2>
+                    <p id="live-reveal-step-label" class="live-reveal-step">Preparando categoria...</p>
+                </header>
+
+                <div id="live-reveal-podium" class="live-reveal-podium"></div>
+
+                <footer class="live-reveal-controls">
+                    <button id="live-reveal-toggle-score-btn" class="btn-outline">Mostrar pontuações</button>
+                    <button id="live-reveal-reset-btn" class="btn-outline">Reiniciar categoria</button>
+                    <button id="live-reveal-next-btn" class="btn-ceremony btn-final">
+                        <span class="btn-text">Próximo Reveal</span>
+                        <span class="btn-shimmer"></span>
+                    </button>
+                    <button id="live-reveal-close-btn" class="btn-outline">Fechar Telão</button>
+                </footer>
+            </div>
+        </section>
     </div>
 
     <!-- Toast Notifications -->

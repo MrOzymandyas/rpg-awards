@@ -11,12 +11,22 @@ const Admin = (function() {
         refreshInterval: 30000, // 30 segundos
         itemsPerPage: 10
     };
+    const FEATURE_FLAGS = {
+        ENABLE_LIVE_REVEAL: true
+    };
 
     // Estado
     let state = {
         currentView: 'results', // results, voters, settings
         autoRefresh: false,
-        refreshTimer: null
+        refreshTimer: null,
+        reveal: {
+            active: false,
+            categoryIndex: 0,
+            step: 0,
+            hideScores: true,
+            results: []
+        }
     };
 
     /**
@@ -29,6 +39,7 @@ const Admin = (function() {
         }
 
         setupAdminListeners();
+        updateLiveRevealEntryButton();
         return true;
     }
 
@@ -49,16 +60,64 @@ const Admin = (function() {
             if (e.target.matches('#refresh-btn') || e.target.closest('#refresh-btn')) {
                 refreshData();
             }
+
+            if (FEATURE_FLAGS.ENABLE_LIVE_REVEAL && (e.target.matches('#toggle-live-reveal-btn') || e.target.closest('#toggle-live-reveal-btn'))) {
+                toggleLiveReveal();
+            }
+
+            if (FEATURE_FLAGS.ENABLE_LIVE_REVEAL && (e.target.matches('#live-reveal-close-btn') || e.target.closest('#live-reveal-close-btn'))) {
+                closeLiveReveal();
+            }
+
+            if (FEATURE_FLAGS.ENABLE_LIVE_REVEAL && (e.target.matches('#live-reveal-next-btn') || e.target.closest('#live-reveal-next-btn'))) {
+                advanceLiveReveal();
+            }
+
+            if (FEATURE_FLAGS.ENABLE_LIVE_REVEAL && (e.target.matches('#live-reveal-reset-btn') || e.target.closest('#live-reveal-reset-btn'))) {
+                resetLiveRevealCategory();
+            }
+
+            if (FEATURE_FLAGS.ENABLE_LIVE_REVEAL && (e.target.matches('#live-reveal-toggle-score-btn') || e.target.closest('#live-reveal-toggle-score-btn'))) {
+                toggleLiveRevealScores();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!state.reveal.active) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeLiveReveal();
+            }
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                advanceLiveReveal();
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                resetLiveRevealCategory();
+            }
         });
     }
 
     /**
      * Atualiza dados do painel (busca dados frescos do Firestore)
      */
-    async function refreshData() {
+    async function refreshData(silent = false) {
         await Storage.refreshVoters();
         UI.updateAdminPanel();
-        UI.showToast('Dados atualizados', 'success');
+
+        if (state.reveal.active) {
+            state.reveal.results = Storage.getResults() || [];
+            if (state.reveal.categoryIndex >= state.reveal.results.length) {
+                state.reveal.categoryIndex = Math.max(0, state.reveal.results.length - 1);
+                state.reveal.step = 0;
+            }
+            renderLiveReveal();
+        }
+
+        if (!silent) {
+            UI.showToast('Dados atualizados', 'success');
+        }
     }
 
     /**
@@ -319,7 +378,7 @@ const Admin = (function() {
         
         state.autoRefresh = true;
         state.refreshTimer = setInterval(() => {
-            refreshData();
+            refreshData(true);
         }, CONFIG.refreshInterval);
     }
 
@@ -364,6 +423,174 @@ const Admin = (function() {
         });
     }
 
+    function getRevealElements() {
+        return {
+            overlay: document.getElementById('live-reveal-overlay'),
+            categoryIndex: document.getElementById('live-reveal-category-index'),
+            categoryTitle: document.getElementById('live-reveal-category-title'),
+            stepLabel: document.getElementById('live-reveal-step-label'),
+            podium: document.getElementById('live-reveal-podium'),
+            nextBtn: document.getElementById('live-reveal-next-btn'),
+            toggleScoreBtn: document.getElementById('live-reveal-toggle-score-btn'),
+            toggleEntryBtn: document.getElementById('toggle-live-reveal-btn')
+        };
+    }
+
+    function toggleLiveReveal() {
+        if (!FEATURE_FLAGS.ENABLE_LIVE_REVEAL) return;
+        if (state.reveal.active) {
+            closeLiveReveal();
+        } else {
+            openLiveReveal();
+        }
+    }
+
+    function openLiveReveal() {
+        const results = Storage.getResults();
+        if (!results || !results.length) {
+            UI.showToast('Sem dados de resultados para iniciar o telão', 'warning');
+            return;
+        }
+
+        const els = getRevealElements();
+        if (!els.overlay) return;
+
+        state.reveal.active = true;
+        state.reveal.results = results;
+        state.reveal.categoryIndex = Math.max(0, Math.min(state.reveal.categoryIndex, results.length - 1));
+        state.reveal.step = 0;
+        state.reveal.hideScores = true;
+
+        els.overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        renderLiveReveal();
+        UI.showToast('Modo telão ativado', 'success');
+    }
+
+    function closeLiveReveal() {
+        const els = getRevealElements();
+        if (!els.overlay) return;
+
+        state.reveal.active = false;
+        els.overlay.hidden = true;
+        document.body.style.overflow = '';
+        updateLiveRevealEntryButton();
+    }
+
+    function getRevealRanksForCategory(result) {
+        const nominees = (result?.nominees || []).slice(0, 3);
+        const availableRanks = nominees.map((_, idx) => idx + 1);
+        return availableRanks.sort((a, b) => b - a);
+    }
+
+    function getStepLabelText(step, revealRanks) {
+        if (step <= 0) return 'Preparando reveal...';
+        const rank = revealRanks[step - 1];
+        if (!rank) return 'Categoria revelada';
+        if (rank === 1) return 'Vencedor revelado';
+        return `${rank}º lugar revelado`;
+    }
+
+    function advanceLiveReveal() {
+        if (!state.reveal.active) return;
+        const current = state.reveal.results[state.reveal.categoryIndex];
+        if (!current) return;
+
+        const revealRanks = getRevealRanksForCategory(current);
+        const maxStep = revealRanks.length;
+
+        if (state.reveal.step < maxStep) {
+            state.reveal.step++;
+            renderLiveReveal();
+            return;
+        }
+
+        if (state.reveal.categoryIndex < state.reveal.results.length - 1) {
+            state.reveal.categoryIndex++;
+            state.reveal.step = 0;
+            renderLiveReveal();
+            return;
+        }
+
+        UI.showToast('Reveal concluído para todas as categorias', 'success');
+    }
+
+    function resetLiveRevealCategory() {
+        if (!state.reveal.active) return;
+        state.reveal.step = 0;
+        renderLiveReveal();
+    }
+
+    function toggleLiveRevealScores() {
+        if (!state.reveal.active) return;
+        state.reveal.hideScores = !state.reveal.hideScores;
+        renderLiveReveal();
+    }
+
+    function renderLiveReveal() {
+        if (!state.reveal.active) return;
+
+        const els = getRevealElements();
+        if (!els.overlay || !els.podium || !els.categoryTitle || !els.categoryIndex || !els.stepLabel || !els.nextBtn || !els.toggleScoreBtn) return;
+
+        const result = state.reveal.results[state.reveal.categoryIndex];
+        if (!result) return;
+
+        const topNominees = (result.nominees || []).slice(0, 3);
+        const revealRanks = getRevealRanksForCategory(result);
+        const revealOrder = [2, 1, 3];
+        const podiumNominees = revealOrder
+            .map(rank => ({ rank, nominee: topNominees[rank - 1] }))
+            .filter(entry => !!entry.nominee);
+
+        els.overlay.classList.toggle('hide-scores', state.reveal.hideScores);
+        els.categoryIndex.textContent = `Categoria ${String(result.category.number).padStart(2, '0')} de ${state.reveal.results.length}`;
+        els.categoryTitle.textContent = result.category.title;
+        els.stepLabel.textContent = getStepLabelText(state.reveal.step, revealRanks);
+
+        els.podium.innerHTML = podiumNominees.map(entry => {
+            const revealIndex = revealRanks.indexOf(entry.rank) + 1;
+            const isRevealed = revealIndex > 0 && state.reveal.step >= revealIndex;
+            const nominee = entry.nominee;
+            const imageUrl = nominee.image || `https://placehold.co/480x640/1a1a25/d4af37?text=${encodeURIComponent(nominee.name.charAt(0) || '?')}`;
+
+            return `
+                <article class="live-reveal-card rank-${entry.rank} ${entry.rank === 1 ? 'winner' : ''} ${isRevealed ? 'revealed' : ''}">
+                    <img class="live-reveal-card-image" src="${imageUrl}" alt="${nominee.name}" loading="eager">
+                    <div class="live-reveal-card-body">
+                        <span class="live-reveal-card-rank">${entry.rank}º Lugar</span>
+                        <span class="live-reveal-card-name">${nominee.name}</span>
+                        <span class="live-reveal-card-score">${nominee.score} pts</span>
+                        <span class="live-reveal-card-meta">1º: ${nominee.firstVotes} | 2º: ${nominee.secondVotes}</span>
+                    </div>
+                </article>
+            `;
+        }).join('');
+
+        const maxStep = revealRanks.length;
+        if (state.reveal.step < maxStep) {
+            els.nextBtn.querySelector('.btn-text').textContent = 'Revelar próximo';
+        } else if (state.reveal.categoryIndex < state.reveal.results.length - 1) {
+            els.nextBtn.querySelector('.btn-text').textContent = 'Próxima categoria';
+        } else {
+            els.nextBtn.querySelector('.btn-text').textContent = 'Finalizar reveal';
+        }
+
+        els.toggleScoreBtn.textContent = state.reveal.hideScores ? 'Mostrar pontuações' : 'Ocultar pontuações';
+        updateLiveRevealEntryButton();
+    }
+
+    function updateLiveRevealEntryButton() {
+        const { toggleEntryBtn } = getRevealElements();
+        if (!toggleEntryBtn) return;
+        if (!FEATURE_FLAGS.ENABLE_LIVE_REVEAL) {
+            toggleEntryBtn.hidden = true;
+            return;
+        }
+        toggleEntryBtn.hidden = false;
+        toggleEntryBtn.textContent = state.reveal.active ? 'Fechar Telão' : 'Modo Telão';
+    }
+
     // API pública
     return {
         init,
@@ -375,6 +602,9 @@ const Admin = (function() {
         startAutoRefresh,
         stopAutoRefresh,
         getVotersList,
+        toggleLiveReveal,
+        closeLiveReveal,
+        advanceLiveReveal,
         
         // Config
         CONFIG,
