@@ -1858,6 +1858,18 @@ body {
     margin-bottom: var(--space-2xl);
 }
 
+.admin-view-switch {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.btn-outline.is-active {
+    border-color: var(--color-gold-primary);
+    background: rgba(212, 175, 55, 0.12);
+    color: var(--color-gold-primary);
+}
+
 .stat-card {
     background: var(--gradient-card);
     border: 1px solid rgba(212, 175, 55, 0.1);
@@ -1885,6 +1897,172 @@ body {
 .results-section {
     display: grid;
     gap: var(--space-2xl);
+}
+
+.admin-voters-section {
+    display: none;
+}
+
+.admin-voters-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+}
+
+.admin-voters-summary .stat {
+    background: var(--gradient-card);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    display: grid;
+    gap: 0.2rem;
+}
+
+.admin-voters-summary .label {
+    color: var(--color-text-secondary);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.admin-voters-summary strong {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-gold-primary);
+}
+
+.admin-voters-list {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.admin-voter-item {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(212, 175, 55, 0.14);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.admin-voter-summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.admin-voter-summary::-webkit-details-marker {
+    display: none;
+}
+
+.admin-voter-identity {
+    display: grid;
+    gap: 0.1rem;
+}
+
+.admin-voter-name {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    color: var(--color-text-primary);
+}
+
+.admin-voter-id {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+}
+
+.admin-voter-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.admin-voter-meta .pill {
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: var(--color-gold-primary);
+    background: rgba(212, 175, 55, 0.08);
+    border-radius: var(--radius-full);
+    padding: 0.2rem 0.6rem;
+    font-size: 0.72rem;
+}
+
+.admin-voter-meta .pill.muted {
+    border-color: rgba(255, 255, 255, 0.12);
+    color: var(--color-text-secondary);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-voter-table-wrap {
+    overflow: auto;
+}
+
+.admin-voter-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 680px;
+}
+
+.admin-voter-table th,
+.admin-voter-table td {
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.85rem;
+}
+
+.admin-voter-table thead th {
+    color: var(--color-gold-muted);
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.18);
+}
+
+.admin-voter-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-voter-row.complete .first,
+.admin-voter-row.complete .second {
+    color: var(--color-gold-primary);
+}
+
+.admin-voter-row.partial .first,
+.admin-voter-row.partial .second {
+    color: var(--color-warning);
+}
+
+.admin-voter-row.empty .first,
+.admin-voter-row.empty .second {
+    color: var(--color-text-muted);
+}
+
+.admin-voter-row .updated {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.admin-voters-empty {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+}
+
+.admin-voters-empty h3 {
+    font-family: var(--font-heading);
+    color: var(--color-text-primary);
+}
+
+.admin-voters-empty p {
+    margin-top: var(--space-sm);
+    color: var(--color-text-secondary);
 }
 
 .admin-category {
@@ -2676,6 +2854,15 @@ body {
 
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-voter-summary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-voter-meta {
+        justify-content: flex-start;
     }
 }
 

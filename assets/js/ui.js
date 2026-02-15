@@ -57,6 +57,9 @@ const UI = (function() {
             totalVoters: document.getElementById('total-voters'),
             completionRate: document.getElementById('completion-rate'),
             adminResults: document.getElementById('admin-results'),
+            adminVoters: document.getElementById('admin-voters'),
+            viewResultsBtn: document.getElementById('view-results-btn'),
+            viewVotersBtn: document.getElementById('view-voters-btn'),
             
             // Toast
             toastContainer: document.getElementById('toast-container')
@@ -68,6 +71,7 @@ const UI = (function() {
         }
 
         initUIPreferences();
+        setAdminView('results');
     }
 
     // ==================== LOADING ====================
@@ -218,6 +222,10 @@ const UI = (function() {
         if (elements.adminPanel) {
             elements.adminPanel.style.display = 'block';
         }
+        const currentView = (typeof Admin !== 'undefined' && typeof Admin.getCurrentView === 'function')
+            ? Admin.getCurrentView()
+            : 'results';
+        setAdminView(currentView);
         updateAdminPanel();
     }
 
@@ -1185,6 +1193,7 @@ const UI = (function() {
     function updateAdminPanel() {
         const stats = Storage.getStats();
         const results = Storage.getResults();
+        const voters = Storage.getAllVoters();
 
         if (stats) {
             if (elements.totalVoters) {
@@ -1197,6 +1206,10 @@ const UI = (function() {
 
         if (results && elements.adminResults) {
             renderAdminResults(results);
+        }
+
+        if (voters && elements.adminVoters) {
+            renderAdminVoters(voters);
         }
     }
 
@@ -1254,6 +1267,158 @@ const UI = (function() {
 
             elements.adminResults.appendChild(categorySection);
         });
+    }
+
+    /**
+     * Define a visualização ativa do painel admin
+     * @param {string} view - results | voters
+     */
+    function setAdminView(view = 'results') {
+        const isVotersView = view === 'voters';
+
+        if (elements.adminResults) {
+            elements.adminResults.style.display = isVotersView ? 'none' : 'grid';
+        }
+
+        if (elements.adminVoters) {
+            elements.adminVoters.style.display = isVotersView ? 'grid' : 'none';
+        }
+
+        if (elements.viewResultsBtn) {
+            elements.viewResultsBtn.classList.toggle('is-active', !isVotersView);
+        }
+
+        if (elements.viewVotersBtn) {
+            elements.viewVotersBtn.classList.toggle('is-active', isVotersView);
+        }
+    }
+
+    /**
+     * Renderiza votos por jogador no admin
+     * @param {Object} voters - Mapa de votantes
+     */
+    function renderAdminVoters(voters) {
+        if (!elements.adminVoters) return;
+
+        const voterEntries = Object.entries(voters || {}).map(([id, data]) => {
+            const votes = data?.votes || {};
+            const completedCategories = Object.values(votes).filter(v => v && v.firstChoice && v.secondChoice).length;
+
+            return {
+                id,
+                name: data?.name || id,
+                votes,
+                completedCategories,
+                firstVote: data?.firstVote || null,
+                lastVote: data?.lastVote || null
+            };
+        }).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+
+        if (!voterEntries.length) {
+            elements.adminVoters.innerHTML = `
+                <div class="admin-voters-empty">
+                    <h3>Nenhum voto encontrado</h3>
+                    <p>Assim que os jogadores votarem, os detalhes aparecerão aqui.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const totalPlayers = PLAYERS.filter(player => player.role === 'player').length;
+        const completedPlayers = voterEntries.filter(voter => voter.completedCategories === CATEGORIES.length).length;
+
+        const votersHtml = voterEntries.map((voter, index) => {
+            const categoryRows = CATEGORIES.map(category => {
+                const vote = voter.votes[category.id] || {};
+                const firstChoice = vote.firstChoice || null;
+                const secondChoice = vote.secondChoice || null;
+                const firstName = firstChoice ? getNomineeName(category.id, firstChoice.nomineeId) : '—';
+                const secondName = secondChoice ? getNomineeName(category.id, secondChoice.nomineeId) : '—';
+                const updatedAt = secondChoice?.timestamp || firstChoice?.timestamp || null;
+
+                let statusClass = 'empty';
+                if (firstChoice && secondChoice) statusClass = 'complete';
+                else if (firstChoice || secondChoice) statusClass = 'partial';
+
+                return `
+                    <tr class="admin-voter-row ${statusClass}">
+                        <td class="category">${escapeHtml(category.title)}</td>
+                        <td class="first">${escapeHtml(firstName)}</td>
+                        <td class="second">${escapeHtml(secondName)}</td>
+                        <td class="updated">${escapeHtml(formatDateTime(updatedAt))}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            return `
+                <details class="admin-voter-item" ${index === 0 ? 'open' : ''}>
+                    <summary class="admin-voter-summary">
+                        <div class="admin-voter-identity">
+                            <span class="admin-voter-name">${escapeHtml(voter.name)}</span>
+                            <span class="admin-voter-id">@${escapeHtml(voter.id)}</span>
+                        </div>
+                        <div class="admin-voter-meta">
+                            <span class="pill">${voter.completedCategories}/${CATEGORIES.length} completas</span>
+                            <span class="pill muted">Início: ${escapeHtml(formatDateTime(voter.firstVote))}</span>
+                            <span class="pill muted">Último voto: ${escapeHtml(formatDateTime(voter.lastVote))}</span>
+                        </div>
+                    </summary>
+                    <div class="admin-voter-table-wrap">
+                        <table class="admin-voter-table">
+                            <thead>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>1º Lugar</th>
+                                    <th>2º Lugar</th>
+                                    <th>Atualizado em</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${categoryRows}
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+            `;
+        }).join('');
+
+        elements.adminVoters.innerHTML = `
+            <div class="admin-voters-summary">
+                <div class="stat">
+                    <span class="label">Jogadores com voto</span>
+                    <strong>${voterEntries.length}/${totalPlayers}</strong>
+                </div>
+                <div class="stat">
+                    <span class="label">Cédulas completas</span>
+                    <strong>${completedPlayers}/${voterEntries.length}</strong>
+                </div>
+            </div>
+            <div class="admin-voters-list">
+                ${votersHtml}
+            </div>
+        `;
+    }
+
+    function getNomineeName(categoryId, nomineeId) {
+        const nominees = NOMINEES[categoryId] || [];
+        const nominee = nominees.find(item => item.id === nomineeId);
+        return nominee ? nominee.name : `ID: ${nomineeId}`;
+    }
+
+    function formatDateTime(timestamp) {
+        if (!timestamp) return '—';
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) return '—';
+        return date.toLocaleString('pt-BR');
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     // ==================== TOAST ====================
@@ -1502,6 +1667,7 @@ const UI = (function() {
         showToast,
         updateDashboard,
         updateAdminPanel,
+        setAdminView,
         setupEventListeners
     };
 })();

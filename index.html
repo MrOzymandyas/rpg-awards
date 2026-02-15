@@ -212,6 +212,10 @@
             </div>
 
             <div class="admin-actions">
+                <div class="admin-view-switch" role="group" aria-label="Alternar visualização do painel">
+                    <button id="view-results-btn" class="btn-outline is-active">Ranking por Categoria</button>
+                    <button id="view-voters-btn" class="btn-outline">Votos por Jogador</button>
+                </div>
                 <button id="refresh-btn" class="btn-outline">Atualizar Dados</button>
                 <button id="export-data-btn" class="btn-outline">Exportar JSON</button>
                 <button id="toggle-live-reveal-btn" class="btn-outline">Modo Telão</button>
@@ -219,6 +223,10 @@
 
             <div class="results-section" id="admin-results">
                 <!-- Results will be populated by JS -->
+            </div>
+
+            <div class="results-section admin-voters-section" id="admin-voters">
+                <!-- Voter details will be populated by JS -->
             </div>
         </div>
 

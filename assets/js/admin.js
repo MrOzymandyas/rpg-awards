@@ -40,6 +40,7 @@ const Admin = (function() {
 
         setupAdminListeners();
         updateLiveRevealEntryButton();
+        setCurrentView(state.currentView, true);
         return true;
     }
 
@@ -59,6 +60,14 @@ const Admin = (function() {
             
             if (e.target.matches('#refresh-btn') || e.target.closest('#refresh-btn')) {
                 refreshData();
+            }
+
+            if (e.target.matches('#view-results-btn') || e.target.closest('#view-results-btn')) {
+                setCurrentView('results');
+            }
+
+            if (e.target.matches('#view-voters-btn') || e.target.closest('#view-voters-btn')) {
+                setCurrentView('voters');
             }
 
             if (FEATURE_FLAGS.ENABLE_LIVE_REVEAL && (e.target.matches('#toggle-live-reveal-btn') || e.target.closest('#toggle-live-reveal-btn'))) {
@@ -105,6 +114,7 @@ const Admin = (function() {
     async function refreshData(silent = false) {
         await Storage.refreshVoters();
         UI.updateAdminPanel();
+        setCurrentView(state.currentView, true);
 
         if (state.reveal.active) {
             state.reveal.results = Storage.getResults() || [];
@@ -117,6 +127,26 @@ const Admin = (function() {
 
         if (!silent) {
             UI.showToast('Dados atualizados', 'success');
+        }
+    }
+
+    /**
+     * Alterna visualização ativa do admin
+     * @param {string} view - results | voters
+     * @param {boolean} silent - Se true, não mostra toast
+     */
+    function setCurrentView(view, silent = false) {
+        const allowedViews = ['results', 'voters'];
+        if (!allowedViews.includes(view)) return;
+
+        state.currentView = view;
+        if (typeof UI !== 'undefined' && typeof UI.setAdminView === 'function') {
+            UI.setAdminView(view);
+        }
+
+        if (!silent && typeof UI !== 'undefined' && typeof UI.showToast === 'function') {
+            const label = view === 'voters' ? 'Votos por jogador' : 'Ranking por categoria';
+            UI.showToast(`Visualização: ${label}`, 'success');
         }
     }
 
@@ -602,6 +632,8 @@ const Admin = (function() {
         startAutoRefresh,
         stopAutoRefresh,
         getVotersList,
+        setCurrentView,
+        getCurrentView: () => state.currentView,
         toggleLiveReveal,
         closeLiveReveal,
         advanceLiveReveal,

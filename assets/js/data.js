@@ -13,6 +13,7 @@ const PLAYERS = [
     { id: 'MIDGARD', key: 'maridogostosonasuaarea', name: 'Midgard', title: 'Lorde Midnelson da Casa Maridus', greeting: 'Bem-vindo, Vossa Senhoria', role: 'player' },
     { id: 'PARTYROCK', key: 'flurryofblows', name: 'Partyrock', title: 'Rei Samuel da Casa Oportunis', greeting: 'Bem-vindo, Sua Majestade', role: 'player' },
     { id: 'JENA', key: 'jenaboy1408', name: 'Jena', title: 'Carecus Mestris', greeting: 'Bem-vindo, Mestre', role: 'player' },
+    { id: 'MENEZES', key: 'menezes123', name: 'Menezes', title: 'Barão Menezes da Casa Furones', greeting: 'Bem-vindo, Vossa Excelência', role: 'player' },
     // Administrador
     { id: 'ADMIN', key: 'Ind0105bet@167847', name: 'Mestre do Jogo', title: 'Grão-Mestre da Cerimônia', greeting: 'Bem-vindo, Grão-Mestre', role: 'admin' }
 ];
