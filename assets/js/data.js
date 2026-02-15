@@ -30,7 +30,7 @@ const CATEGORIES = [
         id: 'melhor-aventura',
         number: '2',
         title: 'Melhor Aventura',
-        description: 'As aventuras, historias e caminhos que trilhamos juntos.',
+        description: 'As aventuras, historias e caminhos que construímos juntos.',
         type: 'scene'
     },
     {
@@ -100,7 +100,7 @@ const CATEGORIES = [
         id: 'medalha-naruto',
         number: '12',
         title: 'Naruto',
-        description: 'Naruto.',
+        description: 'O mais anime de todos.',
         type: 'scene'
     },
     {
