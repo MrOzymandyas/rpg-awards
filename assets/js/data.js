@@ -234,7 +234,7 @@ const NOMINEES = {
         { id: 'morte-eodwulf', name: 'Eodwulf', origin: 'Amon saiu do grupo', description: '', image: 'assets/images/nominees/morreu-feiao/eodwulf.jpg' }
     ],
     'premio-titanic': [
-        { id: 'titanic-cemiterio-theladil', name: 'Cemiterio de Theladil', origin: 'Maior clima de enterro', description: '', image: 'assets/images/nominees/premio-titanic/cemiterio-theladil.jpg' },
+        { id: 'titanic-cemiterio-theladil', name: 'Cemiterio de Thelladil', origin: 'Maior clima de enterro', description: '', image: 'assets/images/nominees/premio-titanic/cemiterio-theladil.jpg' },
         { id: 'titanic-twig-blights-farol', name: 'Twig Blights no Farol', origin: 'Todo mundo pegou no meu pau', description: '', image: 'assets/images/nominees/premio-titanic/twig-blights-no-farol.jpg' },
         { id: 'titanic-marvin-zadash', name: 'Marvin em Zadash', origin: 'Toma aqui pra você lembrar de mim...', description: '', image: 'assets/images/nominees/premio-titanic/marvin-em-zadash.jpg' },
         { id: 'titanic-buraco-do-fedor', name: 'Buraco do Fedor', origin: 'Tem que ser homem.', description: '', image: 'assets/images/nominees/premio-titanic/buraco-do-fedor.jpg' },
